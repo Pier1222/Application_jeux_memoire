@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Ligne {
@@ -28,11 +29,28 @@ public class Ligne {
         }
     }
 
-    public List<Integer> compareLignes (Ligne l) { //Renvoie la liste des indices de boules qui ne sont pas identiques
-        if (boules.length != l.boules.length) {
+    public List<Integer> compareLignes (Ligne l) { //Renvoie la liste des indices de boules qui ne sont pas identiques et rend non actives les boules corrects
+        if (boules.length != NB_BOULES || l.boules.length != NB_BOULES) {
             return null;
         }
-        return null;
+
+        List<Integer> indicesFaux = new ArrayList<Integer>();
+
+        for(int i = 0; i < NB_BOULES; i++) {
+            if(boules[i].getCouleur() != l.boules[i].getCouleur()) {
+                indicesFaux.add(i);
+            } else
+                boules[i].setActive(false);
+        }
+        return indicesFaux;
+    }
+
+    public boolean isLigneColored() { //Renvoie faux si une seule boule n'est pas coloré, vrai sinon
+        for(int i = 0; i < NB_BOULES; i++) {
+            if(boules[i].getCouleur() == null || boules[i].getCouleur() == Couleur.VIDE)
+                return false;
+        }
+        return true;
     }
 
     public static int getNbBoules() {

@@ -5,7 +5,7 @@ public class Boule {
 
     public Boule(Couleur couleur) {
         this.couleur = couleur;
-        active = false;
+        active = true;
     }
 
     public boolean couleurIdentique(Boule b) {

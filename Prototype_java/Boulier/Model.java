@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Model {
 
     private Ligne haut;
@@ -5,6 +7,8 @@ public class Model {
 
     private static int NB_TENTATIVES_MAX = 3;
     private int nbTentatives;
+    private int nbSecondesVerif;
+    private int score;
 
     private boolean inAction;
 
@@ -13,7 +17,9 @@ public class Model {
         bas = new Ligne(false);
         printLignes();
         nbTentatives = NB_TENTATIVES_MAX;
-        inAction = false;
+        nbSecondesVerif = 15;
+        score = 0;
+        inAction = true;
     }
 
     public void printLignes() {
@@ -21,8 +27,16 @@ public class Model {
         System.out.print("Bas: "); bas.print();
     }
 
+    public void reduitNbSecondesVerif() {
+        nbSecondesVerif--;
+    }
+
     public Ligne getHaut() {
         return haut;
+    }
+
+    public List<Integer> getErreurs() {
+        return haut.compareLignes(bas);
     }
 
     public void setHaut(Ligne haut) {
@@ -43,6 +57,38 @@ public class Model {
 
     public void setInAction(boolean inAction) {
         this.inAction = inAction;
+    }
+
+    public static int getNbTentativesMax() {
+        return NB_TENTATIVES_MAX;
+    }
+
+    public static void setNbTentativesMax(int nbTentativesMax) {
+        NB_TENTATIVES_MAX = nbTentativesMax;
+    }
+
+    public int getNbTentatives() {
+        return nbTentatives;
+    }
+
+    public void setNbTentatives(int nbTentatives) {
+        this.nbTentatives = nbTentatives;
+    }
+
+    public int getNbSecondesVerif() {
+        return nbSecondesVerif;
+    }
+
+    public void setNbSecondesVerif(int nbSecondesVerif) {
+        this.nbSecondesVerif = nbSecondesVerif;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }
 

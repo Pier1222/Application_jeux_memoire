@@ -1,5 +1,4 @@
-class
-Appli {
+class Appli {
  
   public static void main(String[] args) {
 
