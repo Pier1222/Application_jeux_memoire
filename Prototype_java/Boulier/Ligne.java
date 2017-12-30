@@ -5,7 +5,7 @@ public class Ligne {
     private static int NB_BOULES = 10;
     private Boule[] boules;
 
-    public Ligne(boolean isColored) {
+    public Ligne(boolean isColored) { //Constructeur qui initialise une Ligne active colorée aléatoirement ou pas colorée
         boules = new Boule[NB_BOULES];
 
         if(isColored)
@@ -37,7 +37,7 @@ public class Ligne {
         List<Integer> indicesFaux = new ArrayList<Integer>();
 
         for(int i = 0; i < NB_BOULES; i++) {
-            if(boules[i].getCouleur() != l.boules[i].getCouleur()) {
+            if(!boules[i].couleurIdentique(l.boules[i])) {
                 indicesFaux.add(i);
             } else
                 boules[i].setActive(false);
@@ -45,7 +45,7 @@ public class Ligne {
         return indicesFaux;
     }
 
-    public boolean isLigneColored() { //Renvoie faux si une seule boule n'est pas coloré, vrai sinon
+    public boolean isLigneColored() { //Renvoie faux si une seule boule n'est pas colorée, vrai sinon
         for(int i = 0; i < NB_BOULES; i++) {
             if(boules[i].getCouleur() == null || boules[i].getCouleur() == Couleur.VIDE)
                 return false;
@@ -69,7 +69,7 @@ public class Ligne {
         this.boules = boules;
     }
 
-    public void print() {
+    public void print() { //Montre la couleur de toute les boules de la Ligne
         System.out.print(" | ");
         for(int i  = 0; i < NB_BOULES; i++) {
             System.out.print( boules[i].getCouleur() + " | ");

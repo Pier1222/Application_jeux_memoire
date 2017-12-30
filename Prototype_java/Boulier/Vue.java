@@ -20,9 +20,12 @@ public class Vue extends JFrame {
 
 	protected JLabel showScore;
 	protected JLabel regardezSequence; //Affiche pendant le temps où l'utilisateur doit regarder la séquence
+	protected JLabel calculScore;
+	protected JLabel tentativesRestantes;
 
 	ControlTimer ct;
 	Timer timerDebut;
+	Timer timerFinEssaie;
 
 	Model m;
 
@@ -51,10 +54,10 @@ public class Vue extends JFrame {
 
 		resultats = new JLabel[Ligne.getNbBoules()];
 		for(int i = 0; i < Ligne.getNbBoules(); i++) {
-			resultats[i] = new JLabel("X ");
+			resultats[i] = new JLabel();
 			resultats[i].setFont(new Font("Affichage resultat", 1, 50));
-			resultats[i].setForeground(Color.RED);
 		}
+		resetResultats();
 
 		submit = new JButton("Répondre");
 		submit.setVisible(false);
@@ -64,6 +67,11 @@ public class Vue extends JFrame {
 
 		showScore = new JLabel();
 		changeScore();
+
+		calculScore = new JLabel("");
+		calculScore.setVisible(false);
+
+		tentativesRestantes = new JLabel("Vous possédez " + m.getNbTentatives() + " tentatives pour compléter votre séquence.");
 
 		boutonsHaut = new JButton[Ligne.getNbBoules()];
 		boutonsBas = new JButton[Ligne.getNbBoules()];
@@ -81,6 +89,7 @@ public class Vue extends JFrame {
 
 		ct = new ControlTimer(m, this);
 		timerDebut = new Timer(1000, ct); //ce timer s'enclenchera 15X1 fois
+		timerFinEssaie = new Timer(10000, ct); //Il aura 10 secondes entre 2 tentatives
 	}
 
 	public void setControlButton(ActionListener listener) {
@@ -113,10 +122,14 @@ public class Vue extends JFrame {
     		pano.add(panelBas);
     		pano.add(submit);
     		pano.add(regardezSequence);
+    		pano.add(calculScore);
+    		pano.add(tentativesRestantes);
+
     		pano.setBackground(vide);
     		panelHaut.setBackground(vide);
     		panelMillieu.setBackground(vide);
     		panelBas.setBackground(vide);
+
 		setContentPane(pano);
 	}
 
@@ -124,9 +137,11 @@ public class Vue extends JFrame {
 		colorLigne(boutonsHaut, m.getHaut());
 	}
 
-	public void deColorHaut() { //Rend la ligne du haut "invisible" (sans pour autant changer le Model
+	public void deColorHaut() { //Rend la ligne du haut "invisible" (sans pour autant changer le Model)
 		for(int i = 0; i < boutonsHaut.length; i++) {
-			boutonsHaut[i].setBackground(vide);
+			if(m.getBas().getBoules()[i].isActive()) { //Si la boule du bas est correct, la version du haut ne se décolorisera pas
+				boutonsHaut[i].setBackground(vide);
+			}
 		}
 	}
 
@@ -153,7 +168,6 @@ public class Vue extends JFrame {
 				ligneBoutons[i].setBackground(vide);
 			else
 				ligneBoutons[i].setBackground(couleurInvalide);
-			//boutonsBas[i].addActionListener(cB);
 		}
 	}
 
@@ -161,23 +175,79 @@ public class Vue extends JFrame {
 		regardezSequence.setText("Regardez la séquence (" + m.getNbSecondesVerif() + ").");
 	}
 
+	public int changeCalculScore(int juste, int erreur) { //Calcul et renvoie le score à ajouter
+		int scoreEnPlus = (juste*2) - erreur;
+		calculScore.setText(juste + "X2 - " + erreur + " = " + scoreEnPlus);
+		return scoreEnPlus;
+	}
+
+	public void changeScore() {
+		showScore.setText("Score: " + m.getScore());
+	}
+
+	public void changeTentativesRestantes() {
+		if(m.getNbTentatives() != 1)
+			tentativesRestantes.setText("Tentatives restantes: " + m.getNbTentatives());
+		else
+			tentativesRestantes.setText("Dernière tentative!!!");
+	}
+
 	public void verification() {
 		java.util.List<Integer> indicesFaux = m.getErreurs();
+		int nbBoulesJustes = 0;
+		int nbBoulesFausses = 0;
+		int scoreEnPlus = 0;
+
+		m.setInAction(true); //Empêche l'utilisateur de faire quoi que ce soit pendant qu'on lui remontre la séquence et si la partie est finie
+
+		for(int i = 0; i < Ligne.getNbBoules(); i++) {
+			Boule bouleActuelle = m.getBas().getBoules()[i];
+			if(indicesFaux.contains(i)) {
+				resultats[i].setText("X ");
+				resultats[i].setForeground(Color.RED);
+				nbBoulesFausses++;
+			} else if(bouleActuelle.isActive()) {
+				resultats[i].setText("V ");
+				resultats[i].setForeground(Color.GREEN);
+				bouleActuelle.setActive(false); //Etant donné qu'elle est correct, on n'en tiendra plus compte désormais
+				nbBoulesJustes++;
+			}
+		}
+		submit.setVisible(false);
+		scoreEnPlus = changeCalculScore(nbBoulesJustes, nbBoulesFausses);
+		m.augmenteScore(scoreEnPlus);
+		calculScore.setVisible(true);
+		changeScore();
+		colorHaut();
 
 		if(indicesFaux.isEmpty()) {
 			System.out.println("Séquence complète !");
+			creerDialogSequenceComplete("Félicitation! Les deux séquences sont identiques." +
+					"\nScore final: " + m.getScore() + "." +
+					"\nNombre de tentative(s) utilisée(s): " + (Model.getNbTentativesMax() - m.getNbTentatives() + 1 + "."));
 		} else {
+			m.perdTentative();
+
 			System.out.print("Indice(s) ou les boules ne correspondent pas : ");
 			for (Integer indice : indicesFaux) {
 				System.out.print(indice + ", ");
 			}
 			System.out.println();
 			m.printLignes();
+			if(m.getNbTentatives() > 0) {
+				changeTentativesRestantes();
+				tentativesRestantes.setVisible(true);
+				timerFinEssaie.start(); //Ce Timer ne s'enclenche que si la partie n'est pas finie
+			} else //La partie est perdue
+				creerDialogPlusDeTentatives("Votre nombre de tentatives est épuisée..." +
+						"\nScore final: " + m.getScore() + ".");
 		}
 	}
 
-	public void changeScore() {
-		showScore.setText("Score: " + m.getScore());
+	public void resetResultats() {
+		for(int i = 0; i < resultats.length; i++) {
+			resultats[i].setText("  ");
+		}
 	}
 
 	public void display() {
@@ -192,5 +262,17 @@ public class Vue extends JFrame {
 		JOptionPane ligneNonComplete = new JOptionPane();
 		ligneNonComplete.showMessageDialog(this, messageLigneNonComplete, "Ligne non complète!", JOptionPane.ERROR_MESSAGE);
 		JDialog fenLigneNonComplete = ligneNonComplete.createDialog(this, "Ligne non complète!");
+	}
+
+	public void creerDialogSequenceComplete(String messageSequenceComplete) {
+		JOptionPane sequenceComplete = new JOptionPane();
+		sequenceComplete.showMessageDialog(this, messageSequenceComplete, "Gagner!", JOptionPane.INFORMATION_MESSAGE);
+		JDialog fenSequenceComplete = sequenceComplete.createDialog(this, "Gagner!");
+	}
+
+	public void creerDialogPlusDeTentatives(String messagePlusDeTentatives) {
+		JOptionPane plusDeTentatives = new JOptionPane();
+		plusDeTentatives.showMessageDialog(this, messagePlusDeTentatives, "Perdue!", JOptionPane.INFORMATION_MESSAGE);
+		JDialog fenPlusDeTentatives = plusDeTentatives.createDialog(this, "Perdue!");
 	}
 }

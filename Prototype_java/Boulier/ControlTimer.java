@@ -13,11 +13,26 @@ public class ControlTimer extends Control implements ActionListener {
             reduitTimer();
             if (m.getNbSecondesVerif() <= 0) {
                 v.regardezSequence.setVisible(false);
+                v.tentativesRestantes.setVisible(false);
                 v.submit.setVisible(true);
+
                 m.setInAction(false);
                 v.deColorHaut();
                 v.timerDebut.stop();
             }
+        } else if(e.getSource() == v.timerFinEssaie) {
+            v.calculScore.setVisible(false);
+            v.tentativesRestantes.setVisible(false);
+            v.submit.setVisible(true);
+
+            //Remet les cases du bas fausses à vide
+            m.resetInactivesBas();
+            v.colorBas();
+
+            v.resetResultats();
+            m.setInAction(false);
+            v.deColorHaut();
+            v.timerFinEssaie.stop();
         }
 
 

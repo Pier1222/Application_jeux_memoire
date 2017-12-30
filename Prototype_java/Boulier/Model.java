@@ -2,8 +2,8 @@ import java.util.List;
 
 public class Model {
 
-    private Ligne haut;
-    private Ligne bas;
+    private Ligne haut; //Ligne à recopier
+    private Ligne bas; //Ligne à remplir
 
     private static int NB_TENTATIVES_MAX = 3;
     private int nbTentatives;
@@ -31,12 +31,24 @@ public class Model {
         nbSecondesVerif--;
     }
 
-    public Ligne getHaut() {
-        return haut;
+    public void resetInactivesBas() {
+        for(int i = 0; i < Ligne.getNbBoules(); i++) {
+            Boule bouleActuelle = bas.getBoules()[i];
+            if(bouleActuelle.isActive())
+                bouleActuelle.changeCouleurToVide();
+        }
+    }
+
+    public void perdTentative() {
+        nbTentatives--;
     }
 
     public List<Integer> getErreurs() {
         return haut.compareLignes(bas);
+    }
+
+    public Ligne getHaut() {
+        return haut;
     }
 
     public void setHaut(Ligne haut) {
@@ -85,6 +97,10 @@ public class Model {
 
     public int getScore() {
         return score;
+    }
+
+    public void augmenteScore(int scoreEnPlus) {
+        score += scoreEnPlus;
     }
 
     public void setScore(int score) {
