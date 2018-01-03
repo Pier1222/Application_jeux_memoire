@@ -16,14 +16,14 @@ public class ControlTimer extends Control implements ActionListener {
                     vue.plateau[i][j].setText("");
                 }
             }
-            //enlever affichage et décrémenter le timer
+            //enlever affichage et décrémenter le timerApparition
             decrementer();
             model.setInAction(false);
-            vue.timer.stop();
+            vue.timerApparition.stop();
         }
     }
 
     public void decrementer(){
-        vue.temps -= 150;
+        vue.tempsApparition -= 150;
     }
 }

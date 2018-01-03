@@ -6,12 +6,13 @@ import java.awt.event.ActionListener;
 
 public class Vue extends JFrame {
     protected JButton[][] plateau;
-    private Model model;
-    private JMenuItem jmi;
-    private ControlButton controlButton;
+    protected Model model;
+    protected JMenuItem jmi;
+    protected ControlButton controlButton;
     protected ControlTimer controlTimer;
-    protected Timer timer;
-    protected int temps = 2000;
+    protected Timer timerApparition;
+    protected Timer timerErreur; //Temps pendant lequel l'erreur est mis en évidence avant de redémarrer la partie
+    protected int tempsApparition;
 
     public Vue(Model model) {
         this.model = model;
@@ -23,12 +24,14 @@ public class Vue extends JFrame {
         setResizable(false);
         setVisible(true);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(3);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private void initTimer() {
-        this.controlTimer=new ControlTimer(this.model,this);
-        this.timer=new Timer(temps,controlTimer);
+        tempsApparition = 2000;
+        controlTimer = new ControlTimer(this.model,this);
+        timerApparition = new Timer(tempsApparition, controlTimer);
+        timerErreur = new Timer(10000, controlTimer);
     }
     public void videPlateau(){
         for (int i = 0; i < plateau.length; i++) {
@@ -42,8 +45,8 @@ public class Vue extends JFrame {
         }
     }
     public void newPlateau(){
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 6; j++) {
+        for (int i = 0; i < Model.getTailleCote(); i++) {
+            for (int j = 0; j < Model.getTailleCote(); j++) {
                 plateau[i][j].setText("");
                 plateau[i][j].setFocusPainted(false);
                 plateau[i][j].setEnabled(false);
@@ -53,8 +56,8 @@ public class Vue extends JFrame {
     }
 
     public void initPlateau() {
-        plateau = new JButton[6][6];
-        JPanel pGlobal = new JPanel(new GridLayout(6,6));
+        plateau = new JButton[Model.getTailleCote()][Model.getTailleCote()];
+        JPanel pGlobal = new JPanel(new GridLayout(Model.getTailleCote(),Model.getTailleCote()));
         for (int i = 0; i < plateau.length; i++) {
             for (int j = 0; j < plateau.length; j++) {
                 plateau[i][j] = new JButton();
@@ -77,8 +80,8 @@ public class Vue extends JFrame {
     }
 
     public void setControlButton(ActionListener e) {
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 6; j++) {
+        for (int i = 0; i < Model.getTailleCote(); i++) {
+            for (int j = 0; j < Model.getTailleCote(); j++) {
                 plateau[i][j].addActionListener(e);
             }
         }
@@ -88,7 +91,7 @@ public class Vue extends JFrame {
     }
     public void debutDePartie(int score){
         videPlateau();
-        if (model.getScore()>=1)videPlateau();
+        if (model.getScore() >=1) videPlateau();
         model.setScore(score);
         model.modifierLesValeurs();
         model.setTabBoolean();
@@ -98,7 +101,7 @@ public class Vue extends JFrame {
             int y=model.genenAleaPourTab();
             int tab[]= {x, y};
             model.setTabBoolean(x,y);
-            if (i >=1){
+            if (i >= 1){
                tab=model.comparerVal(tab);
             }
             x = tab[0];
@@ -109,20 +112,16 @@ public class Vue extends JFrame {
             plateau[x][y].setEnabled(true);
             model.setTabBouton(plateau[x][y],x,y);
             model.setInAction(true);
-            timer.start();
+            timerApparition.start();
         }
         model.setTabBoolean();
     }
 
     public void messagePerdu(){
-        JOptionPane.showMessageDialog(this, "Vous avez perdu, votre score: "+model.getScore(), "Dommage!", JOptionPane.INFORMATION_MESSAGE);
-        model.setScore(0);
+        JOptionPane.showMessageDialog(this, "Vous avez perdu." +
+                "\nVotre score: "+model.getScore(), "Dommage!", JOptionPane.INFORMATION_MESSAGE);
         model.set0tabBouton();
         newPlateau();
         debutDePartie(0);
-
-
-
-
     }
 }

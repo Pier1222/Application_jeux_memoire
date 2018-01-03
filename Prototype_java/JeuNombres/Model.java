@@ -3,6 +3,16 @@ import java.util.ArrayList;
 
 public class Model {
 
+    private static int TAILLE_COTE = 6;
+
+    //La première valeur d'un set se trouvera entre 1 et 5
+    private static int MINDEBUT = 1;
+    private static int MAXDEBUT = 5;
+
+    //Pour une valeur à la place i d'un set, la valeur à la place i+1 vaut +1 ou +2 ou +3 par rapport à la valeur à la place i
+    private static int MININTERVALE = 1;
+    private static int MAXINTERVALE = 3;
+
     private int score;
     private ArrayList valeurs;
     private int nombreDeCase;
@@ -16,8 +26,8 @@ public class Model {
         valeurs = new ArrayList<Integer>();
         nombreDeCase = 0;
         valXY=new ArrayList<Integer[]>();
-        tabBouton=new JButton[6][6];
-        tabBoolean=new boolean[6][6];
+        tabBouton=new JButton[TAILLE_COTE][TAILLE_COTE];
+        tabBoolean=new boolean[TAILLE_COTE][TAILLE_COTE];
         inAction = false;
     }
 
@@ -32,10 +42,10 @@ public class Model {
 
     public JButton getTabBouton(int x,int y){return tabBouton[x][y];}
 
-    //permet de remettre à zéro le tableau de jButton
+    //permet de remettre à zéro le tableau de jbutton
     public void set0tabBouton(){
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 6; j++) {
+        for (int i = 0; i < TAILLE_COTE; i++) {
+            for (int j = 0; j < TAILLE_COTE; j++) {
                 if (tabBouton[i][j]!=null){
                     tabBouton[i][j].setText("");
                 }
@@ -45,15 +55,15 @@ public class Model {
     }
 
     public void setTabBoolean() {
-        for (int i = 0; i <6 ; i++) {
-            for (int j = 0; j < 6; j++) {
+        for (int i = 0; i < TAILLE_COTE ; i++) {
+            for (int j = 0; j < TAILLE_COTE; j++) {
                 tabBoolean[i][j]=false;
             }
 
         }
 
     }
-    //méthode permettant de comparer si une case à déjà été tiré
+    //methode permettant de comparer si une case à déjà été tiré
     public int[] comparerVal(int[] tab){
         int[] tabAlea=new int[2];
         tabAlea=tab;
@@ -89,14 +99,17 @@ public class Model {
         return score+2;
     }
 
-    //on fait le jeu de manière totalement controlé pour les valeurs, vu que pour l'instant
-    //on fait qu'un niveau de difficulté, donc ici les valeurs qui seront afficher
-    //sont mis dans une liste
+    // on fait le jeu de maniere totalement controlé pour les valeurs, vu que pour l'instant
+    // on fait qu'un niveau de difficulté, donc ici les valeurs qui seront afficher
+    // sont mis dans une liste
     public void modifierLesValeurs()
     {
+        int prochainNombre = (int) Math.round(Math.random() * ((MAXDEBUT) - MINDEBUT) + MINDEBUT);
         valeurs.clear();
+
         for (int i = 0; i < trouverLeNombreDeCase(); i++) {
-            valeurs.add(i+1);
+            valeurs.add(prochainNombre);
+            prochainNombre = prochainNombre + (int) Math.round(Math.random() * ((MAXINTERVALE) - MININTERVALE) + MININTERVALE);
         }
         /**
         switch (trouverLeNombreDeCase()) {
@@ -132,8 +145,8 @@ public class Model {
         }**/
     }
 
-    public int genenAleaPourTab(){
-        int c = (int) (Math.random() * 5);
+    public int genenAleaPourTab() {
+        int c = (int) (Math.random() * TAILLE_COTE-1);
         return c;
     }
     public int genenAlea(int i){
@@ -141,9 +154,15 @@ public class Model {
         return c;
     }
 
+    public static int getTailleCote() {
+        return TAILLE_COTE;
+    }
 
-    public void setTableauXY(int tab[])
-    {
+    public static void setTailleCote(int tailleCote) {
+        TAILLE_COTE = tailleCote;
+    }
+
+    public void setTableauXY(int tab[]) {
         valXY.add(tab);
     }
 

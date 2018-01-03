@@ -16,25 +16,25 @@ public class Vue extends JFrame {
 	protected Color vert;
 	protected Color violet;
 
-	JLabel[] resultats;
+	protected JLabel[] resultats;
 
 	protected JLabel showScore;
 	protected JLabel regardezSequence; //Affiche pendant le temps où l'utilisateur doit regarder la séquence
 	protected JLabel calculScore;
 	protected JLabel tentativesRestantes;
 
-	ControlTimer ct;
-	Timer timerDebut;
-	Timer timerFinEssaie;
+	protected ControlTimer ct;
+	protected Timer timerDebut;
+	protected Timer timerFinEssaie;
 
-	Model m;
+	protected Model m;
 
 	public Vue(Model m) {
 		super ("Boulier");
 		this.m = m;
 		initAttribut();
 		addToWindows();
-	    setSize(600,400);                                // Fixe la taille par défaut
+	    setSize(Ligne.getNbBoules()*60,400);  // Pour 10 boules, width = 600
 	    setVisible(true);                                // Affiche la fenetre
 	    setResizable(true);
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize(); //Cela permet de récupérer la taille de l'écran de l'utilisateur
