@@ -1,3 +1,6 @@
+import com.sun.prism.paint.Color;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -21,26 +24,29 @@ public class ControlButton extends Control implements ActionListener {
                 for (int j = 0; j < vue.plateau.length; j++) {
                     if (vue.plateau[i][j] == actionEvent.getSource()) {
                         afficherValeurSiVrai(i, j);
-
                     }
                 }
             }
     }
 
     public void afficherValeurSiVrai(int i, int j) {
-        if ((Integer)parseInt(model.getTabBouton(i, j).getText()) == model.getValeurs().get(0)) {
-            vue.plateau[i][j].setText(model.getTabBouton()[i][j].getText());
-            vue.plateau[i][j].setEnabled(false);
+        JButton buttonVue = vue.plateau[i][j];
+        JButton buttonModel = model.getTabBouton(i, j);
+        if ((Integer)parseInt(buttonModel.getText()) == model.getValeurs().get(0)) { //Si c'est la bonne case qui a été cliqué
+            buttonVue.setText(model.getTabBouton()[i][j].getText());
+            buttonVue.setEnabled(false);
             model.removeValeur(0);
-            if (model.getValeurs().isEmpty()){
-
-                model.setScore(model.getScore()+1);
-                vue.debutDePartie(model.getScore());
+            if (model.getValeurs().isEmpty()) { //Si tous le set de nombres à été découvert
+                vue.pointEnPlus.jouer();
+                vue.timerPointEnPlus.start();
             }
         }
-        else {
-            vue.messagePerdu();
-            vue.debutDePartie(0);
+        else { //Si l'utilisateur s'est trompé
+            model.setInAction(true);
+            vue.erreur.jouer();
+            buttonVue.setBackground(vue.couleurErreur); //La case cliqué est mise en rouge
+            vue.revelerPlateau();
+            vue.timerErreur.start();
         }
     }
 }

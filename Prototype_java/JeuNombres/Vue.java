@@ -4,35 +4,52 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+import static java.lang.Integer.parseInt;
+
 public class Vue extends JFrame {
     protected JButton[][] plateau;
     protected Model model;
     protected JMenuItem jmi;
     protected ControlButton controlButton;
     protected ControlTimer controlTimer;
-    protected Timer timerApparition;
+    protected Timer timerApparition; //Temps pendant lequel les nombres apparaissent
     protected Timer timerErreur; //Temps pendant lequel l'erreur est mis en évidence avant de redémarrer la partie
-    protected int tempsApparition;
+    protected Timer timerPointEnPlus; //Temps pendant lequel la grille entièrement juste est montré
+
+    protected Son erreur;
+    protected Son pointEnPlus;
+
+    protected Color couleurErreur;
+    protected Color couleurBonneCase;
 
     public Vue(Model model) {
         this.model = model;
         setTitle("Jeu des nombres");
         setSize(450,450);
-        initTimer();
-        initMenuBar();
-        initPlateau();
+        initAttribut();
         setResizable(false);
         setVisible(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    private void initTimer() {
-        tempsApparition = 2000;
-        controlTimer = new ControlTimer(this.model,this);
-        timerApparition = new Timer(tempsApparition, controlTimer);
-        timerErreur = new Timer(10000, controlTimer);
+    public void initAttribut() {
+        erreur = new Son("Erreur.wav");
+        pointEnPlus = new Son("Score.wav");
+        couleurErreur = Color.RED;
+        couleurBonneCase = Color.GREEN;
+        initTimer();
+        initMenuBar();
+        initPlateau();
     }
+
+    private void initTimer() {
+        controlTimer = new ControlTimer(this.model,this);
+        timerApparition = new Timer(model.getTempsApparition(), controlTimer);
+        timerErreur = new Timer(5000, controlTimer);
+        timerPointEnPlus = new Timer(1500, controlTimer);
+    }
+
     public void videPlateau(){
         for (int i = 0; i < plateau.length; i++) {
             for (int j = 0; j < plateau.length; j++) {
@@ -44,6 +61,7 @@ public class Vue extends JFrame {
             }
         }
     }
+
     public void newPlateau(){
         for (int i = 0; i < Model.getTailleCote(); i++) {
             for (int j = 0; j < Model.getTailleCote(); j++) {
@@ -86,10 +104,12 @@ public class Vue extends JFrame {
             }
         }
     }
+
     public void afficher(int x,int y,String nombre){
         plateau[x][y].setText(nombre);
     }
-    public void debutDePartie(int score){
+
+    public void debutDePartie(int score) {
         videPlateau();
         if (model.getScore() >=1) videPlateau();
         model.setScore(score);
@@ -114,7 +134,51 @@ public class Vue extends JFrame {
             model.setInAction(true);
             timerApparition.start();
         }
+        System.out.println("\nTemps d'apparition: " + model.getTempsApparition()/1000.0 + " seconde(s)");
         model.setTabBoolean();
+        System.out.println("Selon la Vue:");
+        printPlateau();
+        System.out.println("\nSelon le Model:");
+        model.printTabButton();
+    }
+
+    public void printPlateau() {
+        JButton actualButton = null;
+        for(int x = 0; x < Model.getTailleCote(); x++) {
+            for(int y = 0; y < Model.getTailleCote(); y++) {
+                actualButton = plateau[x][y];
+                System.out.print("| ");
+                if(actualButton == null)
+                    System.out.print("B null");
+                else if (actualButton.getText() == null)
+                    System.out.print("T null");
+                else
+                    System.out.print(actualButton.getText());
+
+                System.out.print(" ");
+            }
+            System.out.println("|");
+        }
+    }
+
+    public void revelerPlateau() { //Montre tous les nombres dans le plateau en coloriant en vert le prochain bouton qu'il fallait cliquer
+        JButton buttonVue = null;
+        JButton buttonModel = null;
+        for(int x = 0; x < Model.getTailleCote(); x++) {
+            for(int y = 0; y < Model.getTailleCote(); y++) {
+                buttonVue = plateau[x][y];
+                buttonModel = model.getTabBouton(x, y);
+                if(buttonModel != null && buttonModel.getText() != null && buttonVue.isEnabled()) {
+                    buttonVue.setText(buttonModel.getText());
+                    if ((Integer) parseInt(buttonModel.getText()) == model.getValeurs().get(0))
+                        buttonVue.setBackground(couleurBonneCase);
+                }
+            }
+        }
+    }
+
+    public void changeTimerApparition() {
+        timerApparition.setDelay(model.getTempsApparition());
     }
 
     public void messagePerdu(){

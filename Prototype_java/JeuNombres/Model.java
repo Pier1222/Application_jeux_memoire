@@ -6,12 +6,14 @@ public class Model {
     private static int TAILLE_COTE = 6;
 
     //La première valeur d'un set se trouvera entre 1 et 5
-    private static int MINDEBUT = 1;
-    private static int MAXDEBUT = 5;
+    private static int MIN_DEBUT = 1;
+    private static int MAX_DEBUT = 5;
 
     //Pour une valeur à la place i d'un set, la valeur à la place i+1 vaut +1 ou +2 ou +3 par rapport à la valeur à la place i
-    private static int MININTERVALE = 1;
-    private static int MAXINTERVALE = 3;
+    private static int MIN_INTERVALE = 1;
+    private static int MAX_INTERVALE = 3;
+
+    private static int TEMPS_APPARITION_DEBUT = 2000;
 
     private int score;
     private ArrayList valeurs;
@@ -21,6 +23,8 @@ public class Model {
     private boolean tabBoolean[][];
     private boolean inAction;
 
+    private int tempsApparition;
+
     public Model() {
         score = 0;
         valeurs = new ArrayList<Integer>();
@@ -29,6 +33,7 @@ public class Model {
         tabBouton=new JButton[TAILLE_COTE][TAILLE_COTE];
         tabBoolean=new boolean[TAILLE_COTE][TAILLE_COTE];
         inAction = false;
+        initTempsApparition();
     }
 
 
@@ -63,7 +68,7 @@ public class Model {
         }
 
     }
-    //methode permettant de comparer si une case à déjà été tiré
+    //méthode permettant de comparer si une case à déjà été tiré
     public int[] comparerVal(int[] tab){
         int[] tabAlea=new int[2];
         tabAlea=tab;
@@ -104,12 +109,12 @@ public class Model {
     // sont mis dans une liste
     public void modifierLesValeurs()
     {
-        int prochainNombre = (int) Math.round(Math.random() * ((MAXDEBUT) - MINDEBUT) + MINDEBUT);
+        int prochainNombre = (int) Math.round(Math.random() * ((MAX_DEBUT) - MIN_DEBUT) + MIN_DEBUT);
         valeurs.clear();
 
         for (int i = 0; i < trouverLeNombreDeCase(); i++) {
             valeurs.add(prochainNombre);
-            prochainNombre = prochainNombre + (int) Math.round(Math.random() * ((MAXINTERVALE) - MININTERVALE) + MININTERVALE);
+            prochainNombre = prochainNombre + (int) Math.round(Math.random() * ((MAX_INTERVALE) - MIN_INTERVALE) + MIN_INTERVALE);
         }
         /**
         switch (trouverLeNombreDeCase()) {
@@ -154,12 +159,39 @@ public class Model {
         return c;
     }
 
+    public void printTabButton() {
+        JButton actualButton = null;
+        for(int x = 0; x < TAILLE_COTE; x++) {
+            for(int y = 0; y < TAILLE_COTE; y++) {
+                actualButton = tabBouton[x][y];
+                System.out.print("| ");
+                if(actualButton == null)
+                    System.out.print("B null");
+                else if (actualButton.getText() == null)
+                    System.out.print("T null");
+                else
+                    System.out.print(actualButton.getText());
+
+                System.out.print(" ");
+            }
+            System.out.println("");
+        }
+    }
+
     public static int getTailleCote() {
         return TAILLE_COTE;
     }
 
     public static void setTailleCote(int tailleCote) {
         TAILLE_COTE = tailleCote;
+    }
+
+    public static int getTempsApparitionDebut() {
+        return TEMPS_APPARITION_DEBUT;
+    }
+
+    public static void setTempsApparitionDebut(int tempsApparitionDebut) {
+        TEMPS_APPARITION_DEBUT = tempsApparitionDebut;
     }
 
     public void setTableauXY(int tab[]) {
@@ -172,5 +204,21 @@ public class Model {
 
     public void setInAction(boolean inAction) {
         this.inAction = inAction;
+    }
+
+    public int getTempsApparition() {
+        return tempsApparition;
+    }
+
+    public void setTempsApparition(int tempsApparition) {
+        this.tempsApparition = tempsApparition;
+    }
+
+    public void reduitTempsApparition() {
+        tempsApparition -= 150;
+    }
+
+    public void initTempsApparition() {
+        tempsApparition = TEMPS_APPARITION_DEBUT;
     }
 }
