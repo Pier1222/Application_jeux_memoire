@@ -10,7 +10,7 @@ public class ControlTimer extends Control implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
-        if(actionEvent.getSource() == vue.timerApparition) {
+        if(actionEvent.getSource() == vue.timerApparition) {  //enlever affichage et décrémenter le timerApparition
             for (int i = 0; i < vue.plateau.length; i++) {
                 for (int j = 0; j < vue.plateau.length; j++) {
                     if (vue.plateau[i][j].getText() != "") {
@@ -18,11 +18,10 @@ public class ControlTimer extends Control implements ActionListener {
                         vue.plateau[i][j].setText("");
                     }
                 }
-                //enlever affichage et décrémenter le timerApparition
-                decrementerTempsApparition();
-                model.setInAction(false);
-                vue.timerApparition.stop();
             }
+            decrementerTempsApparition();
+            model.setInAction(false);
+            vue.timerApparition.stop();
         } else if (actionEvent.getSource() == vue.timerErreur) {
             JButton actualButton = null;
             for(int x = 0; x < Model.getTailleCote(); x++) {

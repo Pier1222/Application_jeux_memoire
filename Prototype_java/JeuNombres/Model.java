@@ -13,7 +13,7 @@ public class Model {
     private static int MIN_INTERVALE = 1;
     private static int MAX_INTERVALE = 3;
 
-    private static int TEMPS_APPARITION_DEBUT = 2000;
+    private static int TEMPS_APPARITION_DEBUT = 3000; //Au début d'une partie, les nombres apparaissent pendant 3 secondes
 
     private int score;
     private ArrayList valeurs;
@@ -51,29 +51,33 @@ public class Model {
     public void set0tabBouton(){
         for (int i = 0; i < TAILLE_COTE; i++) {
             for (int j = 0; j < TAILLE_COTE; j++) {
-                if (tabBouton[i][j]!=null){
+                if (tabBouton[i][j] != null){
                     tabBouton[i][j].setText("");
                 }
             }
-
         }
     }
 
     public void setTabBoolean() {
-        for (int i = 0; i < TAILLE_COTE ; i++) {
+        for (int i = 0; i < TAILLE_COTE; i++) {
             for (int j = 0; j < TAILLE_COTE; j++) {
                 tabBoolean[i][j]=false;
             }
-
         }
-
     }
-    //méthode permettant de comparer si une case à déjà été tiré
-    public int[] comparerVal(int[] tab){
-        int[] tabAlea=new int[2];
-        tabAlea=tab;
-        while (tabBoolean[tabAlea[0]][tabAlea[1]]==true) {
 
+    public void videButtons() {
+        for(int x = 0; x < TAILLE_COTE; x++) {
+            for(int y = 0; y < TAILLE_COTE; y++) {
+                tabBouton[x][y] = null;
+            }
+        }
+    }
+
+    //méthode permettant de comparer si une case à déjà été tiré
+    public int[] comparerVal(){
+        int[] tabAlea = {genenAleaPourTab(), genenAleaPourTab()};
+        while (tabBoolean[tabAlea[0]][tabAlea[1]] == true) {
             tabAlea[0] = genenAleaPourTab();
             tabAlea[1] = genenAleaPourTab();
             System.out.println("valeur en while "+tabAlea[0]+" "+tabAlea[1]);
@@ -82,6 +86,7 @@ public class Model {
         setTabBoolean(tabAlea[0],tabAlea[1]);
         return tabAlea;
     }
+
     public void setTabBoolean(int x,int y){
         tabBoolean[x][y]=true;
     }
@@ -90,7 +95,7 @@ public class Model {
         this.score = score;
     }
     public void setTabBouton(JButton button,int x, int y) {
-        tabBouton[x][y]=new JButton(button.getText());
+        tabBouton[x][y] = new JButton(button.getText());
     }
 
     public ArrayList getValeurs() {
@@ -101,10 +106,15 @@ public class Model {
     // fonction qui permet de trouver le nombre de case qu'il faut ajouter au niveau des difficultés
     public int trouverLeNombreDeCase()
     {
-        return score+2;
+        int nbCasesSansLimite = score + 2; //Combien il aurait de cases si on était pas limité en nombre de cases
+        int limite = TAILLE_COTE*TAILLE_COTE; //De base on est limité à 6X6 = 36 cases
+        if(nbCasesSansLimite <= limite)
+            return nbCasesSansLimite;
+        else
+            return limite;
     }
 
-    // on fait le jeu de maniere totalement controlé pour les valeurs, vu que pour l'instant
+    // on fait le jeu de manière totalement controlé pour les valeurs, vu que pour l'instant
     // on fait qu'un niveau de difficulté, donc ici les valeurs qui seront afficher
     // sont mis dans une liste
     public void modifierLesValeurs()
@@ -151,7 +161,7 @@ public class Model {
     }
 
     public int genenAleaPourTab() {
-        int c = (int) (Math.random() * TAILLE_COTE-1);
+        int c = (int) (Math.random() * TAILLE_COTE);
         return c;
     }
     public int genenAlea(int i){
@@ -174,8 +184,27 @@ public class Model {
 
                 System.out.print(" ");
             }
-            System.out.println("");
+            System.out.println("|");
         }
+    }
+
+    public void printTabBoolean() {
+        for(int x = 0; x < TAILLE_COTE; x++) {
+            for(int y = 0; y < TAILLE_COTE; y++) {
+                System.out.print("| " + tabBoolean[x][y] + " ");
+            }
+            System.out.println("|");
+        }
+    }
+
+    public boolean isTabBooleaanIsFull() {
+        for(int x = 0; x < TAILLE_COTE; x++) {
+            for(int y = 0; y < TAILLE_COTE; y++) {
+                if(tabBoolean[x][y] == false)
+                    return false;
+            }
+        }
+        return true;
     }
 
     public static int getTailleCote() {

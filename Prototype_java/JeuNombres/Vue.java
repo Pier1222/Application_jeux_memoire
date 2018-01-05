@@ -10,7 +10,6 @@ public class Vue extends JFrame {
     protected JButton[][] plateau;
     protected Model model;
     protected JMenuItem jmi;
-    protected ControlButton controlButton;
     protected ControlTimer controlTimer;
     protected Timer timerApparition; //Temps pendant lequel les nombres apparaissent
     protected Timer timerErreur; //Temps pendant lequel l'erreur est mis en évidence avant de redémarrer la partie
@@ -90,7 +89,7 @@ public class Vue extends JFrame {
 
     private void initMenuBar() {
         JMenuBar jmb = new JMenuBar();
-        JMenu jm = new JMenu("Options");
+        JMenu jm = new JMenu("Menu");
         jmi = new JMenuItem("Nouvelle partie");
         jm.add(jmi);
         jmb.add(jm);
@@ -110,20 +109,16 @@ public class Vue extends JFrame {
     }
 
     public void debutDePartie(int score) {
+        int x = 0;
+        int y = 0;
         videPlateau();
+        model.videButtons();
         if (model.getScore() >=1) videPlateau();
         model.setScore(score);
         model.modifierLesValeurs();
         model.setTabBoolean();
         for (int i = 0; i < model.trouverLeNombreDeCase(); i++) {
-
-            int x=model.genenAleaPourTab();
-            int y=model.genenAleaPourTab();
-            int tab[]= {x, y};
-            model.setTabBoolean(x,y);
-            if (i >= 1){
-               tab=model.comparerVal(tab);
-            }
+            int tab[] = model.comparerVal();
             x = tab[0];
             y = tab[1];
             model.setTableauXY(tab);
@@ -131,12 +126,14 @@ public class Vue extends JFrame {
             System.out.println("\nValeur " + (i+1) + ": X = " + x + " Y = " + y);
             plateau[x][y].setEnabled(true);
             model.setTabBouton(plateau[x][y],x,y);
-            model.setInAction(true);
-            timerApparition.start();
         }
-        System.out.println("\nTemps d'apparition: " + model.getTempsApparition()/1000.0 + " seconde(s)");
+        model.setInAction(true);
+        timerApparition.start();
+        System.out.println("Disponibilité des cases:");
+        model.printTabBoolean();
         model.setTabBoolean();
-        System.out.println("Selon la Vue:");
+        System.out.println("\nTemps d'apparition: " + timerApparition.getDelay()/1000.0 + " seconde(s)");
+        System.out.println("\nSelon la Vue:");
         printPlateau();
         System.out.println("\nSelon le Model:");
         model.printTabButton();
@@ -178,12 +175,13 @@ public class Vue extends JFrame {
     }
 
     public void changeTimerApparition() {
+        timerApparition.setInitialDelay(model.getTempsApparition()); //Pour une raison que j'ignore, uniquement cette méthode réussit à changer le délai entre l'apparition des cases et la disparition des nombres
         timerApparition.setDelay(model.getTempsApparition());
     }
 
     public void messagePerdu(){
         JOptionPane.showMessageDialog(this, "Vous avez perdu." +
-                "\nVotre score: "+model.getScore(), "Dommage!", JOptionPane.INFORMATION_MESSAGE);
+                "\nVotre score: "+model.getScore() + ".", "Dommage!", JOptionPane.INFORMATION_MESSAGE);
         model.set0tabBouton();
         newPlateau();
         debutDePartie(0);
