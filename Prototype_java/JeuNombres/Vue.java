@@ -1,5 +1,3 @@
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -179,11 +177,21 @@ public class Vue extends JFrame {
         timerApparition.setDelay(model.getTempsApparition());
     }
 
-    public void messagePerdu(){
-        JOptionPane.showMessageDialog(this, "Vous avez perdu." +
-                "\nVotre score: "+model.getScore() + ".", "Dommage!", JOptionPane.INFORMATION_MESSAGE);
+    public void reset() {
+        increaseToMaxTempsApparition();
+        messagePerdu();
         model.set0tabBouton();
         newPlateau();
         debutDePartie(0);
+    }
+
+    public void increaseToMaxTempsApparition() {
+        model.setTempsApparition(Model.getTempsApparitionDebut());
+        changeTimerApparition();
+    }
+
+    public void messagePerdu(){
+        JOptionPane.showMessageDialog(this, "Vous avez perdu." +
+                "\nVotre score: "+model.getScore() + ".", "Dommage!", JOptionPane.INFORMATION_MESSAGE);
     }
 }

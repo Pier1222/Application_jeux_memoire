@@ -13,6 +13,12 @@ public class Model {
     private boolean inAction;
 
     public Model() {
+        haut = null;
+        bas = null;
+        setValeurs();
+    }
+
+    public void setValeurs() {
         haut = new Ligne(true);
         bas = new Ligne(false);
         printLignes();

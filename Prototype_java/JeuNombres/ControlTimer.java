@@ -33,9 +33,7 @@ public class ControlTimer extends Control implements ActionListener {
                 }
             }
             //Reset le jeu
-            increaseToMaxTempsApparition();
-            vue.messagePerdu();
-            vue.debutDePartie(0);
+            vue.reset();
             vue.timerErreur.stop();
         } else if (actionEvent.getSource() == vue.timerPointEnPlus) {
             //Remet un set de nombres en augmentant le score
@@ -50,10 +48,5 @@ public class ControlTimer extends Control implements ActionListener {
             model.reduitTempsApparition();
             vue.changeTimerApparition();
         }
-    }
-
-    public void increaseToMaxTempsApparition() {
-        model.setTempsApparition(Model.getTempsApparitionDebut());
-        vue.changeTimerApparition();
     }
 }

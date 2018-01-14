@@ -12,18 +12,14 @@ public class ControlTimer extends Control implements ActionListener {
         if(e.getSource() == v.timerDebut) {
             reduitTimer();
             if (m.getNbSecondesVerif() <= 0) {
-                v.regardezSequence.setVisible(false);
-                v.tentativesRestantes.setVisible(false);
-                v.submit.setVisible(true);
+                v.visibiliteTentative();
 
                 m.setInAction(false);
                 v.deColorHaut();
                 v.timerDebut.stop();
             }
         } else if(e.getSource() == v.timerFinEssaie) {
-            v.calculScore.setVisible(false);
-            v.tentativesRestantes.setVisible(false);
-            v.submit.setVisible(true);
+            v.visibiliteTentative();
 
             //Remet les cases du bas fausses à vide
             m.resetInactivesBas();
@@ -34,8 +30,6 @@ public class ControlTimer extends Control implements ActionListener {
             v.deColorHaut();
             v.timerFinEssaie.stop();
         }
-
-
     }
 
     private void reduitTimer() {

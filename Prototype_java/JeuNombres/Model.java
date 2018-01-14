@@ -17,7 +17,6 @@ public class Model {
 
     private int score;
     private ArrayList valeurs;
-    private int nombreDeCase;
     private ArrayList valXY;
     private JButton tabBouton[][];
     private boolean tabBoolean[][];
@@ -28,7 +27,6 @@ public class Model {
     public Model() {
         score = 0;
         valeurs = new ArrayList<Integer>();
-        nombreDeCase = 0;
         valXY=new ArrayList<Integer[]>();
         tabBouton=new JButton[TAILLE_COTE][TAILLE_COTE];
         tabBoolean=new boolean[TAILLE_COTE][TAILLE_COTE];
@@ -126,38 +124,6 @@ public class Model {
             valeurs.add(prochainNombre);
             prochainNombre = prochainNombre + (int) Math.round(Math.random() * ((MAX_INTERVALE) - MIN_INTERVALE) + MIN_INTERVALE);
         }
-        /**
-        switch (trouverLeNombreDeCase()) {
-            case 2:
-                valeurs.clear();
-                valeurs.add(3);
-                valeurs.add(5);
-                break;
-
-            case 3:
-                valeurs.clear();
-                valeurs.add(1);
-                valeurs.add(3);
-                valeurs.add(5);
-                break;
-
-            case 4:
-                valeurs.clear();
-                valeurs.add(1);
-                valeurs.add(3);
-                valeurs.add(4);
-                valeurs.add(5);
-                break;
-
-            case 5:
-                valeurs.clear();
-                valeurs.add(1);
-                valeurs.add(2);
-                valeurs.add(3);
-                valeurs.add(4);
-                valeurs.add(5);
-
-        }**/
     }
 
     public int genenAleaPourTab() {
@@ -197,6 +163,7 @@ public class Model {
         }
     }
 
+    //Vérifie si toutes les cases du tableau de booléen sont à true
     public boolean isTabBooleaanIsFull() {
         for(int x = 0; x < TAILLE_COTE; x++) {
             for(int y = 0; y < TAILLE_COTE; y++) {
