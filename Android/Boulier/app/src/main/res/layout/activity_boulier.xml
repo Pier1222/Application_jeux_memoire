@@ -25,149 +25,34 @@
         app:layout_constraintVertical_bias="0.13"
         tools:background="@android:color/background_light" />
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
+        android:id="@+id/haut"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="30dp"
         android:layout_marginBottom="178dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="75dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
-        <ImageView
-            android:id="@+id/haut1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="500dp"
-            android:layout_weight="1"
-            android:src="@drawable/vide"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
 
-        <ImageView
-            android:id="@+id/haut2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="400dp"
-            android:layout_weight="1"
-            android:src="@drawable/vide"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:id="@+id/bas"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="172dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
-        <ImageView
-            android:id="@+id/haut3"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="300dp"
-            android:layout_weight="1"
-            android:src="@drawable/vide"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/haut4"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="200dp"
-            android:layout_weight="1"
-            android:src="@drawable/vide"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/haut5"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="100dp"
-            android:layout_weight="1"
-            android:src="@drawable/vide"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/haut6"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="0dp"
-            android:layout_weight="1"
-            android:src="@drawable/vide"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/haut7"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="100dp"
-            android:layout_weight="1"
-            android:src="@drawable/vide"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/haut8"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="200dp"
-            android:layout_weight="1"
-            android:src="@drawable/vide"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/haut9"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="300dp"
-            android:layout_weight="1"
-            android:src="@drawable/vide"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/haut10"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="400dp"
-            android:layout_weight="1"
-            android:src="@drawable/vide"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -1,21 +1,27 @@
 package com.example.girardot.boulier;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 //Fait office de vue et de contrôleur en même temps
 public class Vue extends AppCompatActivity implements View.OnClickListener {
 
-    Model m;
-    Button reponse;
-    ImageView[] imagesHaut;
+    public Model m;
+    public Button reponse;
 
-    ImageView[] imagesBas; //A faire
+    public ImageView[] imagesHaut;
+    public ImageView[] imagesBas;
+
+    public Handler handlerDebut;
+
+    public ControlTimer ct;
+
+    
 
     //OnClickListener clickListener;
 
@@ -26,32 +32,47 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.activity_boulier);
         reponse = findViewById(R.id.reponse);
 
-        imagesHaut = new ImageView[10]; //Faut voir pour qu'il s'adapte au Model
+        imagesHaut = new ImageView[Ligne.getNbBoules()];
         initImageHaut();
 
-        imagesBas = new ImageView[10];
-        //Initialiser imageBas
-
+        imagesBas = new ImageView[Ligne.getNbBoules()];
+        initImageBas();
 
         reponse.setOnClickListener(this);
+
+        ct = new ControlTimer(m, this);
+
+        handlerDebut = new Handler();
+        ct.start(handlerDebut, 1000);
+
+    }
+
+    public void initImageBas() {
+        LinearLayout lB = (LinearLayout) findViewById(R.id.bas);
+        for(int i = 0; i < imagesBas.length; i++) {
+            imagesBas[i] = new ImageView(getApplicationContext());
+            initImage(imagesBas[i], lB);
+        }
+        //Un Listener uniquement aux boutons du bas
+        for(int i = 0; i < imagesBas.length; i++) {
+            imagesBas[i].setOnClickListener(this);
+        }
+        colorBas();
     }
 
     public void initImageHaut() {
-        imagesHaut[0] = findViewById(R.id.haut1);
-        imagesHaut[1] = findViewById(R.id.haut2);
-        imagesHaut[2] = findViewById(R.id.haut3);
-        imagesHaut[3] = findViewById(R.id.haut4);
-        imagesHaut[4] = findViewById(R.id.haut5);
-        imagesHaut[5] = findViewById(R.id.haut6);
-        imagesHaut[6] = findViewById(R.id.haut7);
-        imagesHaut[7] = findViewById(R.id.haut8);
-        imagesHaut[8] = findViewById(R.id.haut9);
-        imagesHaut[9] = findViewById(R.id.haut10);
-
-        //A retirer quand la ligne du bas sera faite
+        LinearLayout lH = (LinearLayout) findViewById(R.id.haut);
         for(int i = 0; i < imagesHaut.length; i++) {
-            imagesHaut[i].setOnClickListener(this);
+            imagesHaut[i] = new ImageView(getApplicationContext());
+            initImage(imagesHaut[i], lH);
         }
+        colorHaut();
+    }
+
+    public void initImage(ImageView image, LinearLayout layout) {
+        image.setImageResource(R.drawable.vide);
+        image.setPadding(0, 0, -60, 0);
+        layout.addView(image);
     }
 
     /*public void setClickListener(OnClickListener listener) {
@@ -101,14 +122,18 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
     //Partie contrôleur
     @Override
     public void onClick(View view) {
+        if(m.isInAction()) {
+            System.out.println("Interdiction d'appuyer sur l'écran");
+            return;
+        }
+
         if(view == reponse)
-            System.out.println("Réponse");
+            m.printLignes();
         else {
-            //En ce qui concerne la suite, il faudrat tous simplement changer tous les appels à imagesHaut/getHaut etc... PAR LEUR VERSION BAS
-            for(int i = 0; i < imagesHaut.length; i++) {
-                if(view == imagesHaut[i]) {
-                    m.getHaut().getBoules()[i].changeCouleur();
-                    colorHaut();
+            for(int i = 0; i < imagesBas.length; i++) {
+                if(view == imagesBas[i]) {
+                    m.getBas().getBoules()[i].changeCouleur();
+                    colorBas();
                 }
             }
         }
