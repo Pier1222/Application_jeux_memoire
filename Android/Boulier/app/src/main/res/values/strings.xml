@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">Boulier</string>
+
+    <string name="rep">Répondre</string>
+    <string name="debScore">Score</string>
+    <string name="sequence">Regardez la séquence.</string>
+
+    <string name="tentative">Vous disposez de n tentatives pour avoir une séquence complètement correct, bonne chance.</string>
+    <string name="debTentative">Vous disposez de</string>
+    <string name="endTentative">tentatives pour avoir une séquence complètement correct, bonne chance.</string>
+    <string name="notLastTentative">Tentatives restantes:</string>
+    <string name="lastTentative">Dernière tentative !</string>
+
+    <string name="ligneNonCompleteTexte">Vous devez compléter la ligne du bas avant de répondre.</string>
+    <string name="LigneNonCompleteTitre">Ligne non complète !</string>
+    <string name="LigneNonCompleteOk">J\'ai compris.</string>
+
+    <string name="scoreFinal">Score final</string>
+
+    <string name="sequenceCompleteTexte1">Félicitation ! les deux séquences sont identiques.</string>
+    <string name="sequenceCompleteTexte2">Nombre de tentative(s) utilisée(s)</string>
+    <string name="sequenceCompleteTitre">Gagner !</string>
+    <string name="sequenceCompleteOk">Génial !</string>
+
+    <string name="tentativeEpuiseesTexte">Votre nombre de tentatives est épuisé...</string>
+    <string name="tentativeEpuiseesTitre">Perdue !</string>
+    <string name="tentativeEpuisseOk">Mince...</string>
+
 </resources>

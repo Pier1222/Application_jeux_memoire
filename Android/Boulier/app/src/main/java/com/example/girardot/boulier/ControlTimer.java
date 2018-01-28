@@ -2,6 +2,7 @@ package com.example.girardot.boulier;
 
 
 import android.os.Handler;
+import android.view.View;
 
 public class ControlTimer implements Runnable {
 
@@ -32,12 +33,23 @@ public class ControlTimer implements Runnable {
         if(actualHandler == v.handlerDebut) {
             reduitTimer();
             if (m.getNbSecondesVerif() > 0) {
-                System.out.println(m.getNbSecondesVerif());
                 prerun(); //A la différence du Timer de Java, il faut dire quand est-ce qu'on veut continuer la boucle et pas quand on veut l'arrêter
             } else {
                 v.deColorHaut();
                 m.setInAction(false);
+                v.visibiliteTentative();
             }
+        } else if(actualHandler == v.handlerFinEssaie) {
+            v.visibiliteTentative();
+
+            //Remet les cases du bas fausses à vide
+            m.resetInactivesBas();
+            v.colorBas();
+
+            //v.resetResultats();
+            m.setInAction(false);
+            v.deColorHaut();
+            //Pas de 'v.handlerFinEssaie.stop' car je rappelle qu'il faut juste prévenir quand on veut reboucler
         }
     }
 
@@ -68,7 +80,7 @@ public class ControlTimer implements Runnable {
 
     private void reduitTimer() {
         m.reduitNbSecondesVerif();
-        //v.changeRegardezSequence();
+        v.changeRegardezSequence();
     }
 
 }
