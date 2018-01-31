@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Ligne {
-    private static int NB_BOULES = 5;
+    private static int NB_BOULES = 10;
     private Boule[] boules;
 
     public Ligne(boolean isColored) { //Constructeur qui initialise une Ligne active colorée aléatoirement ou pas colorée
@@ -77,5 +77,13 @@ public class Ligne {
             System.out.print( boules[i].getCouleur() + " | ");
         }
         System.out.println("");
+    }
+
+    public String toString() {
+        String infos = " | ";
+        for(int i  = 0; i < NB_BOULES; i++) {
+            infos += ( boules[i].getCouleur() + " | ");
+        }
+        return infos;
     }
 }

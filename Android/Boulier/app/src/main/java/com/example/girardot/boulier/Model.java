@@ -1,8 +1,12 @@
 package com.example.girardot.boulier;
 
+import android.util.Log;
+
 import java.util.List;
 
 public class Model {
+
+    private static String TAG = "Model"; //Permet de créer des messages de Debug plus comphréensible avec Log.d
 
     private Ligne haut; //Ligne à recopier
     private Ligne bas; //Ligne à remplir
@@ -31,8 +35,10 @@ public class Model {
     }
 
     public void printLignes() {
-        System.out.print("Haut: "); haut.print();
-        System.out.print("Bas: "); bas.print();
+        Log.d(TAG, "Haut: " + haut.toString());
+        Log.d(TAG, "Bas: " + bas.toString());
+        /*System.out.print("Haut: "); haut.print();
+        System.out.print("Bas: "); bas.print();*/
     }
 
     public void reduitNbSecondesVerif() {

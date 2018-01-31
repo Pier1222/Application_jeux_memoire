@@ -26,4 +26,11 @@
     <string name="tentativeEpuiseesTitre">Perdue !</string>
     <string name="tentativeEpuisseOk">Mince...</string>
 
+    <string name="resetTexte">Voulez-vous rejouez ?</string>
+    <string name="resetTitre">Rejouer ?</string>
+    <string name="resetOui">Oui</string>
+    <string name="resetNon">Non (revenir au menu du jeu)</string>
+
+    <string name="tutoTexte1">Bienvenue.</string>
+
 </resources>

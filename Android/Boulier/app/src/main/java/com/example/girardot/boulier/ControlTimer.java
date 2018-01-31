@@ -2,7 +2,6 @@ package com.example.girardot.boulier;
 
 
 import android.os.Handler;
-import android.view.View;
 
 public class ControlTimer implements Runnable {
 
@@ -42,11 +41,11 @@ public class ControlTimer implements Runnable {
         } else if(actualHandler == v.handlerFinEssaie) {
             v.visibiliteTentative();
 
-            //Remet les cases du bas fausses à vide
+            //Remet les boules du bas fausses à vide
             m.resetInactivesBas();
             v.colorBas();
 
-            //v.resetResultats();
+            v.cacheResultats();
             m.setInAction(false);
             v.deColorHaut();
             //Pas de 'v.handlerFinEssaie.stop' car je rappelle qu'il faut juste prévenir quand on veut reboucler
@@ -71,7 +70,7 @@ public class ControlTimer implements Runnable {
             m.resetInactivesBas();
             v.colorBas();
 
-            v.resetResultats();
+            v.cacheResultats();
             m.setInAction(false);
             v.deColorHaut();
             v.timerFinEssaie.stop();

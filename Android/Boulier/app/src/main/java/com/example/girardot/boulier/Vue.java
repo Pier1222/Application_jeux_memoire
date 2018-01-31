@@ -2,26 +2,29 @@ package com.example.girardot.boulier;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 //Fait office de vue et de contrôleur en même temps
 public class Vue extends AppCompatActivity implements View.OnClickListener {
 
+    private static String TAG = "Vue"; //Permet de créer des messages de Debug plus comphréensible avec Log.d
+
     protected Model m;
     protected Button reponse;
 
     protected ImageView[] imagesHaut;
+    protected ImageView[] resultats;
     protected ImageView[] imagesBas;
 
     protected TextView showScore;
@@ -60,6 +63,9 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         imagesHaut = new ImageView[Ligne.getNbBoules()];
         initImageHaut();
 
+        resultats = new ImageView[Ligne.getNbBoules()];
+        initResultats();
+
         imagesBas = new ImageView[Ligne.getNbBoules()];
         initImageBas();
 
@@ -84,6 +90,16 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
             imagesBas[i].setOnClickListener(this);
         }
         colorBas();
+    }
+
+    public void initResultats() {
+        LinearLayout lC = (LinearLayout) findViewById(R.id.centre);
+        for(int i = 0; i < resultats.length; i++) {
+            resultats[i] = new ImageView(getApplicationContext());
+            resultats[i].setPadding(-((Ligne.getNbBoules()*7)-5), 0, -(Ligne.getNbBoules()*8), 0); //Les boules sont plus ou moins espacé en fonction du nombre qu'il y a (le maximum est de pouvoir en avoir 15 au maximum)
+            lC.addView(resultats[i]);
+        }
+        cacheResultats();
     }
 
     public void initImageHaut() {
@@ -160,9 +176,20 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
             else if(bouleActuelle.getCouleur() == Couleur.VIDE)
                 ligneImages[i].setImageResource(R.drawable.vide);
             else
-                System.out.println("Couleur invalide (ajouter une nouvelle image pour montrer ça)");
+                Log.d(TAG, "Couleur invalide (ajouter une nouvelle image pour montrer ça)");
                 //ligneBoutons[i].setBackground(couleurInvalide);
         }
+    }
+
+    public void cacheResultats() {
+        for(int i = 0; i < resultats.length; i++) {
+            resultats[i].setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void reveleUnResultat(ImageView resultat, int ressourceInt) {
+        resultat.setVisibility(View.VISIBLE);
+        resultat.setImageResource(ressourceInt);
     }
 
     public void changeRegardezSequence() {
@@ -201,12 +228,14 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         for(int i = 0; i < Ligne.getNbBoules(); i++) {
             Boule bouleActuelle = m.getBas().getBoules()[i];
             if(indicesFaux.contains(i)) {
-                //resultats[i].setText("X ");
-                //resultats[i].setForeground(Color.RED);
+                //resultats[i].setText("X");
+                //resultats[i].setTextColor(Color.RED);
+                reveleUnResultat(resultats[i], R.drawable.faux);
                 nbBoulesFausses++;
             } else if(bouleActuelle.isActive()) {
-                //resultats[i].setText("V ");
-                //resultats[i].setForeground(Color.GREEN);
+                //resultats[i].setText("V");
+                //resultats[i].setTextColor(Color.GREEN);
+                reveleUnResultat(resultats[i], R.drawable.correct);
                 bouleActuelle.setActive(false); //Etant donné qu'elle est correct, on n'en tiendra plus compte désormais
                 nbBoulesJustes++;
             }
@@ -219,17 +248,19 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         colorHaut(); //Pendant la vérification, on montre de nouveau la ligne du haut
 
         if(indicesFaux.isEmpty()) {
-            System.out.println("Séquence complète !");
+            Log.d(TAG, "Séquence complète !");
             creerDialogSequenceComplete();
             //reset();
         } else {
             m.perdTentative();
 
-            System.out.print("Indice(s) ou les boules ne correspondent pas : ");
+            Log.d(TAG, "Indice(s) ou les boules ne correspondent pas : ");
+            String indicesFauxString = "";
             for (Integer indice : indicesFaux) {
-                System.out.print(indice + ", ");
+                indicesFauxString += ( indice + ", ");
             }
-            System.out.println();
+            Log.d(TAG, indicesFauxString);
+
             m.printLignes();
             if(m.getNbTentatives() > 0) {
                 changeTentativesRestantes();
@@ -242,6 +273,21 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
+    public void reset() {
+
+        m.setValeurs();
+        cacheResultats();
+
+        changeScore();
+        changeTentativesRestantes();
+        changeRegardezSequence();
+
+        colorHaut();
+        colorBas();
+        visibiliteDebutDePartie();
+        ct.start(handlerDebut, 1000);
+    }
+
     public void creerDialogLigneNonComplete() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.ligneNonCompleteTexte));
@@ -250,7 +296,7 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         builder.setPositiveButton(getString(R.string.LigneNonCompleteOk), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                System.out.println("ok");
+                Log.d(TAG,"Ligne non complète !");
             }
         });
         AlertDialog dialog = builder.create();
@@ -267,7 +313,8 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         builder.setPositiveButton(getString(R.string.sequenceCompleteOk), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                System.out.println("ok");
+                Log.d(TAG, "Séquence complète");
+                creerDialogReset();
             }
         });
         AlertDialog dialog = builder.create();
@@ -283,7 +330,30 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         builder.setPositiveButton(getString(R.string.tentativeEpuisseOk), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                System.out.println("ok");
+                Log.d(TAG, "Plus de tentatives");
+                creerDialogReset();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void creerDialogReset() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.resetTexte));
+        builder.setCancelable(false);
+        builder.setTitle(getString(R.string.resetTitre));
+        builder.setPositiveButton(getString(R.string.resetOui), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "Recommencer");
+                reset();
+            }
+        });
+        builder.setNegativeButton(R.string.resetNon, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "Revenir au menu");
             }
         });
         AlertDialog dialog = builder.create();
@@ -294,7 +364,7 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if(m.isInAction()) {
-            System.out.println("Interdiction d'appuyer sur l'écran");
+            Log.d(TAG, "Interdiction d'appuyer sur l'écran");
             return;
         }
 
