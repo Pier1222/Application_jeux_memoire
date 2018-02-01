@@ -24,7 +24,7 @@ public class ControlTimer implements Runnable {
         prerun();
     }
 
-    private void prerun() {
+    protected void prerun() {
         actualHandler.postDelayed(this, nbMillisecondes);
     }
 
@@ -51,31 +51,6 @@ public class ControlTimer implements Runnable {
             //Pas de 'v.handlerFinEssaie.stop' car je rappelle qu'il faut juste prévenir quand on veut reboucler
         }
     }
-
-    /*public void actionPerformed(ActionEvent e) {
-
-        if(e.getSource() == v.timerDebut) {
-            reduitTimer();
-            if (m.getNbSecondesVerif() <= 0) {
-                v.visibiliteTentative();
-
-                m.setInAction(false);
-                v.deColorHaut();
-                v.timerDebut.stop();
-            }
-        } else if(e.getSource() == v.timerFinEssaie) {
-            v.visibiliteTentative();
-
-            //Remet les cases du bas fausses à vide
-            m.resetInactivesBas();
-            v.colorBas();
-
-            v.cacheResultats();
-            m.setInAction(false);
-            v.deColorHaut();
-            v.timerFinEssaie.stop();
-        }
-    }*/
 
     private void reduitTimer() {
         m.reduitNbSecondesVerif();

@@ -2,7 +2,6 @@ package com.example.girardot.boulier;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -69,14 +68,12 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         imagesBas = new ImageView[Ligne.getNbBoules()];
         initImageBas();
 
-        ct = new ControlTimer(m, this);
-
         handlerDebut = new Handler();
         handlerFinEssaie = new Handler();
-        ct.start(handlerDebut, 1000);
+
+        initControlTimer();
 
         visibiliteDebutDePartie();
-
     }
 
     public void initImageBas() {
@@ -96,7 +93,7 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         LinearLayout lC = (LinearLayout) findViewById(R.id.centre);
         for(int i = 0; i < resultats.length; i++) {
             resultats[i] = new ImageView(getApplicationContext());
-            resultats[i].setPadding(-((Ligne.getNbBoules()*7)-5), 0, -(Ligne.getNbBoules()*8), 0); //Les boules sont plus ou moins espacé en fonction du nombre qu'il y a (le maximum est de pouvoir en avoir 15 au maximum)
+            resultats[i].setPadding(-((Ligne.getNbBoules()*8)), 0, -(Ligne.getNbBoules()*8), 0); //Les boules sont plus ou moins espacé en fonction du nombre qu'il y a (le maximum est de pouvoir en avoir 15 au maximum)
             lC.addView(resultats[i]);
         }
         cacheResultats();
@@ -113,7 +110,7 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
 
     public void initImage(ImageView image, LinearLayout layout) {
         image.setImageResource(R.drawable.vide);
-        image.setPadding(-((Ligne.getNbBoules()*3)-5), 0, -(Ligne.getNbBoules()*4), 0); //Les boules sont plus ou moins espacé en fonction du nombre qu'il y a (le maximum est de pouvoir en avoir 15 au maximum)
+        image.setPadding(-((Ligne.getNbBoules()*4)), 0, -(Ligne.getNbBoules()*4), 0); //Les boules sont plus ou moins espacé en fonction du nombre qu'il y a (le maximum est de pouvoir en avoir 15 au maximum)
         layout.addView(image);
     }
 
@@ -136,6 +133,11 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         calculScore.setVisibility(View.VISIBLE);
         regardezSequence.setVisibility(View.GONE);
         tentativesRestantes.setVisibility(View.VISIBLE);
+    }
+
+    public void initControlTimer() { //Dans cette version, il lance aussi le handlerDebut
+        ct = new ControlTimer(m, this);
+        ct.start(handlerDebut, 1000);
     }
 
     /*public void setClickListener(OnClickListener listener) {

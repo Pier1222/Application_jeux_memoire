@@ -32,5 +32,7 @@
     <string name="resetNon">Non (revenir au menu du jeu)</string>
 
     <string name="tutoTexte1">Bienvenue.</string>
+    <string name="tutoTitre">Comment jouer</string>
+    <string name="tutoOk">Ok</string>
 
 </resources>

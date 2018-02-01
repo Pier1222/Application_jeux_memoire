@@ -1,9 +1,11 @@
 <resources>
-    <string name="app_name">MemoireMania</string>
-    <string name="action_settings">A propos</string>
-    <string name="memory">MEMORY</string>
-    <string name="le_memory">Le memory</string>
-    <string name="trouve_les_paires_et_devient_le_plus_fort">Trouve les paires et devient le plus fort !!</string>
-    <string name="jouer">JOUER :-)</string>
-    <string name="entraines_toi">ENTRAINES TOI</string>
+    <string name="app_name">BestMemoryGames</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
