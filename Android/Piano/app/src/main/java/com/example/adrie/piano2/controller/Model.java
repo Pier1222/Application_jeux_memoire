@@ -1,17 +1,16 @@
 package com.example.adrie.piano2.controller;
 
-import java.util.Random;
+import com.example.adrie.piano2.R;
 
 public class Model {
     //Rappel: dans le Model: TOUT en private
-    private final int TAILLE_COTE = 5;
-
+    private final int NB_TOUCHES = 13; //A cause de l'esthétique d'un piano, il ne sera pas possible de faire varier le nom de touche
 
     private int score;
     private int nbTouchesReussies; //Indique le nombre de touches réussites à la séquence raté
-    private Touche[][] touches;
+    private Touche[] touches; //Il s'agit des touches présentent sur l'écran
 
-    private Touche[] sequenceOrdi;
+    private Touche[] sequenceOrdi; //Il s'agit de la séquence de touches créer par l'ordi
 
     private boolean inAction; //Indique si l'application est en train de faire quelque chose que l'utilisateur ne doit pas interrompre
     private boolean tourJoueur; //Indique si le joueur doit essayer de reproduire la séquence ou pas
@@ -29,75 +28,24 @@ public class Model {
         inAction = false;
         tourJoueur = false;
         initTouches();
-
     }
 
     public void initTouches() {
-        String[][] tabSons = new String[TAILLE_COTE][TAILLE_COTE];
-        touches = new Touche[TAILLE_COTE][TAILLE_COTE];
+        touches = new Touche[NB_TOUCHES];
 
-        tabSons[0][0] = "Son1.wav";
-        tabSons[0][1] = "Son2.wav";
-        tabSons[0][2] = "Son3.wav";
-        tabSons[0][3] = "Son4.wav";
-        tabSons[0][4] = "Son5.wav";
-
-        tabSons[1][0] = "Son6.wav";
-        tabSons[1][1] = "Son7.wav";
-        tabSons[1][2] = "Son8.wav";
-        tabSons[1][3] = "Son9.wav";
-        tabSons[1][4] = "Son10.wav";
-
-        tabSons[2][0] = "Son11.wav";
-        tabSons[2][1] = "Son12.wav";
-        tabSons[2][2] = "Son13.wav";
-        tabSons[2][3] = "Son14.wav";
-        tabSons[2][4] = "Son15.wav";
-
-        tabSons[3][0] = "Son16.wav";
-        tabSons[3][1] = "Son17.wav";
-        tabSons[3][2] = "Son18.wav";
-        tabSons[3][3] = "Son19.wav";
-        tabSons[3][4] = "Son20.wav";
-
-        tabSons[4][0] = "Son21.wav";
-        tabSons[4][1] = "Son22.wav";
-        tabSons[4][2] = "Son23.wav";
-        tabSons[4][3] = "Son24.wav";
-        tabSons[4][4] = "Son25.wav";
-
-        touches[0][0] = new Touche(tabSons[0][0], Couleur.BLANC);
-        touches[0][1] = new Touche(tabSons[0][1], Couleur.NOIR);
-        touches[0][2] = new Touche(tabSons[0][2], Couleur.BLANC);
-        touches[0][3] = new Touche(tabSons[0][3], Couleur.NOIR);
-        touches[0][4] = new Touche(tabSons[0][4], Couleur.BLANC);
-
-        touches[1][0] = new Touche(tabSons[1][0], Couleur.BLANC);
-        touches[1][1] = new Touche(tabSons[1][1], Couleur.NOIR);
-        touches[1][2] = new Touche(tabSons[1][2], Couleur.BLANC);
-        touches[1][3] = new Touche(tabSons[1][3], Couleur.NOIR);
-        touches[1][4] = new Touche(tabSons[1][4], Couleur.BLANC);
-
-        touches[2][0] = new Touche(tabSons[2][0], Couleur.NOIR);
-        touches[2][1] = new Touche(tabSons[2][1], Couleur.BLANC);
-        touches[2][2] = new Touche(tabSons[2][2], Couleur.BLANC);
-        touches[2][3] = new Touche(tabSons[2][3], Couleur.NOIR);
-        touches[2][4] = new Touche(tabSons[2][4], Couleur.BLANC);
-
-        touches[3][0] = new Touche(tabSons[3][0], Couleur.NOIR);
-        touches[3][1] = new Touche(tabSons[3][1], Couleur.BLANC);
-        touches[3][2] = new Touche(tabSons[3][2], Couleur.BLANC);
-        touches[3][3] = new Touche(tabSons[3][3], Couleur.NOIR);
-        touches[3][4] = new Touche(tabSons[3][4], Couleur.BLANC);
-
-        touches[4][0] = new Touche(tabSons[4][0], Couleur.NOIR);
-        touches[4][1] = new Touche(tabSons[4][1], Couleur.BLANC);
-        touches[4][2] = new Touche(tabSons[4][2], Couleur.NOIR);
-        touches[4][3] = new Touche(tabSons[4][3], Couleur.BLANC);
-        touches[4][4] = new Touche(tabSons[4][4], Couleur.BLANC);
-
-
-        Couleur couleurIndice = Couleur.NOIR;
+        touches[0] = new Touche(R.raw.son, Couleur.BLANC);
+        touches[1] = new Touche(R.raw.son, Couleur.NOIR);
+        touches[2] = new Touche(R.raw.son, Couleur.BLANC);
+        touches[3] = new Touche(R.raw.son, Couleur.NOIR);
+        touches[4] = new Touche(R.raw.son, Couleur.BLANC);
+        touches[5] = new Touche(R.raw.son, Couleur.BLANC);
+        touches[6] = new Touche(R.raw.son, Couleur.NOIR);
+        touches[7] = new Touche(R.raw.son, Couleur.BLANC);
+        touches[8] = new Touche(R.raw.son, Couleur.NOIR);
+        touches[9] = new Touche(R.raw.son, Couleur.BLANC);
+        touches[10] = new Touche(R.raw.son, Couleur.NOIR);
+        touches[11] = new Touche(R.raw.son, Couleur.BLANC);
+        touches[12] = new Touche(R.raw.son, Couleur.BLANC);
     }
 
     private Couleur reverseCouleurIndice(Couleur couleurIndice) {
@@ -154,15 +102,15 @@ public class Model {
         sequenceOrdi[place] = touche;
     }
 
-    public int getTAILLE_COTE() {
-        return TAILLE_COTE;
+    public int getNB_TOUCHES() {
+        return NB_TOUCHES;
     }
 
-    public Touche[][] getTouches() {
+    public Touche[] getTouches() {
         return touches;
     }
 
-    public void setTouches(Touche[][] touches) {
+    public void setTouches(Touche[] touches) {
         this.touches = touches;
     }
 

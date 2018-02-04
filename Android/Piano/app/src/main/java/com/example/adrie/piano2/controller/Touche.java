@@ -1,22 +1,22 @@
 package com.example.adrie.piano2.controller;
 
 public class Touche { //représente une touche de piano
-    private String nomSon; //Les objets de types Son sont valable que pour la Vue
+    private int idSon; //Les objets de types Son sont valable que pour la Vue
     private Couleur couleur; //La vue se référera à cette valeur pour colorer la touche
     private boolean estActif; //Montre si c'est la touche sur laquelle on appuie
 
-    public Touche(String nomSon, Couleur couleur) {
-        this.nomSon = nomSon;
+    public Touche(int idSon, Couleur couleur) {
+        this.idSon = idSon;
         this.couleur = couleur;
         estActif = false;
     }
 
-    public String getNomSon() {
-        return nomSon;
+    public int getIdSon() {
+        return idSon;
     }
 
-    public void setNomSon(String nomSon) {
-        this.nomSon = nomSon;
+    public void setIdSon(int idSon) {
+        this.idSon = idSon;
     }
 
     public Couleur getCouleur() {
