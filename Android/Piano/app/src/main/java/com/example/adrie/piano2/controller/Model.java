@@ -14,6 +14,7 @@ public class Model {
 
     private boolean inAction; //Indique si l'application est en train de faire quelque chose que l'utilisateur ne doit pas interrompre
     private boolean tourJoueur; //Indique si le joueur doit essayer de reproduire la séquence ou pas
+    private boolean inParty; //Indique si le joueur est dans une partie ou si il s'amuse simplement avec les touches
 
     private int tailleSequence;
     private int placeSequence; //Ce sera l'endroit où on est dans la séquence (que cela soit pour l'ordi qui joue une séquence ou pour l'utilisateur qui doit la reproduire
@@ -26,6 +27,7 @@ public class Model {
         sequenceOrdi = new Touche[tailleSequence];
         sequenceOrdi[0] = null;
         inAction = false;
+        inParty = false;
         tourJoueur = false;
         initTouches();
     }
@@ -33,19 +35,19 @@ public class Model {
     public void initTouches() {
         touches = new Touche[NB_TOUCHES];
 
-        touches[0] = new Touche(R.raw.son, Couleur.BLANC);
-        touches[1] = new Touche(R.raw.son, Couleur.NOIR);
-        touches[2] = new Touche(R.raw.son, Couleur.BLANC);
-        touches[3] = new Touche(R.raw.son, Couleur.NOIR);
-        touches[4] = new Touche(R.raw.son, Couleur.BLANC);
-        touches[5] = new Touche(R.raw.son, Couleur.BLANC);
-        touches[6] = new Touche(R.raw.son, Couleur.NOIR);
-        touches[7] = new Touche(R.raw.son, Couleur.BLANC);
-        touches[8] = new Touche(R.raw.son, Couleur.NOIR);
-        touches[9] = new Touche(R.raw.son, Couleur.BLANC);
-        touches[10] = new Touche(R.raw.son, Couleur.NOIR);
-        touches[11] = new Touche(R.raw.son, Couleur.BLANC);
-        touches[12] = new Touche(R.raw.son, Couleur.BLANC);
+        touches[0] = new Touche(R.raw.son1, Couleur.BLANC);
+        touches[1] = new Touche(R.raw.son2, Couleur.NOIR);
+        touches[2] = new Touche(R.raw.son3, Couleur.BLANC);
+        touches[3] = new Touche(R.raw.son4, Couleur.NOIR);
+        touches[4] = new Touche(R.raw.son5, Couleur.BLANC);
+        touches[5] = new Touche(R.raw.son6, Couleur.BLANC);
+        touches[6] = new Touche(R.raw.son7, Couleur.NOIR);
+        touches[7] = new Touche(R.raw.son8, Couleur.BLANC);
+        touches[8] = new Touche(R.raw.son9, Couleur.NOIR);
+        touches[9] = new Touche(R.raw.son10, Couleur.BLANC);
+        touches[10] = new Touche(R.raw.son11, Couleur.NOIR);
+        touches[11] = new Touche(R.raw.son12, Couleur.BLANC);
+        touches[12] = new Touche(R.raw.son13, Couleur.BLANC);
     }
 
     private Couleur reverseCouleurIndice(Couleur couleurIndice) {
@@ -76,6 +78,7 @@ public class Model {
         reinitPlaceSequence();
         score = 0;
         nbTouchesReussies = 0;
+        inParty = false;
     }
 
     public boolean verifToucheJoueur(Touche touche) { //Vérifie si la touche correspond à celle attendu actuellement dans la séquence
@@ -158,5 +161,13 @@ public class Model {
 
     public void setTourJoueur(boolean tourJoueur) {
         this.tourJoueur = tourJoueur;
+    }
+
+    public boolean isInParty() {
+        return inParty;
+    }
+
+    public void setInParty(boolean inParty) {
+        this.inParty = inParty;
     }
 }

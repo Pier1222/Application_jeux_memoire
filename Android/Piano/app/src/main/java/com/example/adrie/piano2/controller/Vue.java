@@ -1,5 +1,7 @@
 package com.example.adrie.piano2.controller;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -7,25 +9,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.adrie.piano2.R;
 
 public class Vue extends AppCompatActivity implements View.OnClickListener {
-
-    // findViewById(id); sert à référencer les éléments graphiques     DOIT ETRE DANS LE onCreate() A LA SUITE !
-    /*
-
-    button.setOnClickListener(new View.OnClickListener() {     listener du button
-        @Override
-        public void onClick(View w){
-
-        }
-    });
-
-    AlertDialog
-    DialogInterface
-
-     */
 
     protected Button lancer;
 
@@ -33,9 +21,18 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
     protected Son[] sonsPiano;
 
     protected Handler handlerClignotement;
-    protected ControlTimer ct;
+    protected Handler handlerJoueTouche;
+    protected ControlTimer ctClignotement;
+    protected ControlTimer ctJoueTouche;
 
     protected Model m;
+
+    protected TextView etatDeLaPartie;
+    protected TextView showScore;
+
+    int tempsDebut;
+    int tempsDurantSequence;
+    int tempsEntreSequences;
 
     private static final String TAG = "Vue";
 
@@ -46,11 +43,20 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_piano);
 
+        etatDeLaPartie = findViewById(R.id.etat);
+        showScore = findViewById(R.id.score);
+
+        tempsDebut = 100;
+        tempsDurantSequence = 2000;
+        tempsEntreSequences = 2500;
+
         initButtons();
         initSons();
 
         handlerClignotement = new Handler();
-        ct = new ControlTimer(m, this);
+        handlerJoueTouche = new Handler();
+        ctClignotement = new ControlTimer(m, this);
+        ctJoueTouche = new ControlTimer(m, this);
     }
 
     public void initButtons() {
@@ -87,40 +93,90 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
-    /*public void etatEnCours() {
-        etatDeLaPartie.setText("Ecoutez la séquence...");
-    }*/
+    public void etatEnCours() {
+        etatDeLaPartie.setText(getString(R.string.tourMachine));
+    }
 
-    /*public void etatAVous() {
-        etatDeLaPartie.setText("A vous !");
-    }*/
+    public void etatAVous() {
+        etatDeLaPartie.setText(getString(R.string.tourJoueur));
+    }
 
-    /*public void debutPartie() {
-        lance.setVisible(false);
+    public void debutPartie() {
+        lancer.setVisibility(View.GONE);
         etatEnCours();
-        etatDeLaPartie.setVisible(true);
+        etatDeLaPartie.setVisibility(View.VISIBLE);
         changeScore();
-        showScore.setVisible(true);
-    }*/
+        showScore.setVisibility(View.VISIBLE);
+    }
 
-    /*public void finPartie() {
-        lance.setVisible(true);
-        etatDeLaPartie.setVisible(false);
-        showScore.setVisible(false);
-    }*/
+    public void finPartie() {
+        lancer.setVisibility(View.VISIBLE);
+        etatDeLaPartie.setVisibility(View.GONE);
+        showScore.setVisibility(View.GONE);
+    }
+
+    public void changeScore() {
+        showScore.setText(getString(R.string.debScore) + ": " + m.getScore());
+    }
+
+    public void creerDialogPerdu() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.perduTexte1p1) + "\n" + getString(R.string.perduTexte1p2) + " " + m.getScore() + " " + getString(R.string.perduTexte2) + " " + m.getNbTouchesReussies() + " " + getString(R.string.perduTexte3));
+        builder.setCancelable(false);
+        builder.setTitle(getString(R.string.perduTitre));
+        builder.setPositiveButton(getString(R.string.perduOk), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "Perdu");
+                //creerDialogReset();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
 
     //Partie contrôleur
     @Override
     public void onClick(View view) {
-        if(m.isInAction())
+        if(m.isInAction()) {
             Log.d(TAG, "Ce n'est pas le moment pour ça");
+            return;
+        }
         if(view == lancer) {
+            debutPartie();
+            m.setInAction(true);
+            m.setInParty(true);
+            ctJoueTouche.start(handlerJoueTouche, tempsDebut);
             Log.d(TAG, "lancer");
         } else {
             for(int i = 0; i < piano.length; i++) {
+                Button touchePiano = null;
                 if(view == piano[i]) {
-                    lanceAnimationBouton(i);
+                    touchePiano = piano[i];
+                    if(m.isTourJoueur()) {
+                        Touche toucheAVerifier = m.getTouches()[i];
+                        if(!m.verifToucheJoueur(toucheAVerifier)) {
+                            creerDialogPerdu();
+                            m.reinitPiano();
+                            m.setTourJoueur(false);
+                            finPartie();
+                            return;
+                        } else {
+                            m.avanceSequence();
+                            m.augmenteNbTouchesReussies();
+                            lanceAnimationBouton(i);
+                            if(m.getPlaceSequence() >= m.getTailleSequence()) {
+                                m.succesReproductionSequence();
+                                changeScore();
+                                etatEnCours();
+                                m.setTourJoueur(false);
+                                ctJoueTouche.start(handlerJoueTouche, tempsEntreSequences);
+                            }
+                        }
+                    } else {
+                        lanceAnimationBouton(i);
+                    }
                 }
             }
         }
@@ -130,7 +186,6 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         sonsPiano[i].jouer();
         m.getTouches()[i].setEstActif(true);
         m.setInAction(true);
-        ct.start(handlerClignotement, 500);
-        //timerClignotementTouche.start();
+        ctClignotement.start(handlerClignotement, 500);
     }
 }
