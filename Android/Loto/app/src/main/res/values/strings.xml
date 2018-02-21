@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Loto</string>
+
+    <string name="rec">Réclamer</string>
+    <string name="debScore">Score</string>
+
+    <string name="regardez">Regardez ces nombres.</string>
+
+    <string name="completTitre">Grille complète</string>
+    <string name="completTexte">Vous avez compléter cette Grille !!!!</string>
+    <string name="completOk">Je suis prêt pour la prochaine !</string>
+
+    <string name="perduTitre">Perdue !</string>
+    <string name="perduTexte">Vous avez perdu tous vos vies...</string>
+    <string name="perduOk">Aie...</string>
+</resources>
