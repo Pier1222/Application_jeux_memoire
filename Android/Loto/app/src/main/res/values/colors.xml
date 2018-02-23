@@ -9,4 +9,8 @@
     <color name="desactive">#878787</color>
     <color name="blanc">#ffffff</color>
     <color name="bordure">#000000</color>
+
+    <color name="jaune">#fff780</color>
+    <color name="bleu">#00a4e6</color>
+
 </resources>

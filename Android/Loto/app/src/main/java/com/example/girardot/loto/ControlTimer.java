@@ -3,7 +3,6 @@ package com.example.girardot.loto;
 
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -76,6 +75,57 @@ public class ControlTimer implements Runnable {
                         v.grille[x][y].setBackgroundResource(R.drawable.button_background_blanc);
                         m.getGrille().getCases()[x][y].setEstErreur(false);
                     }
+                }
+            }
+        } else if (actualHandler == v.handlerScore) {
+            v.montrePointsEnPlus.setText(""); //Supprime le texte
+        } else if (actualHandler == v.handlerClignotementGrille) {
+            v.colorisationAleatoire();
+            m.incrementenbClignotementGrille();
+            if(m.getNbClignotementsGrille() >= 20) {
+                v.montreGrilleComplete.setText("");
+                v.colorisationVertEntier();
+                m.nouvelleGrille();
+                v.creerDialogGrilleComplete();
+            } else {
+                prerun();
+            }
+        } else if(actualHandler == v.handlerColorLigne) {
+            v.grille[v.ligneAColorer][m.getPhaseColorisationLigneActu()].setBackgroundResource(R.drawable.button_background_correct);
+            m.getGrille().getCases()[v.ligneAColorer][m.getPhaseColorisationLigneActu()].setEstCorrect(true);
+            m.incrementePhaseColorisationLigneActu();
+            if(m.getPhaseColorisationLigneActu() < Grille.getNbColonnes())
+                prerun();
+            else {
+                m.resetPhaseColorisationLigneActu();
+                if (Grille.getNbColonnes() >= Grille.getNbLignes()) { //Est en théorie toujours vrai dans le cadre de cette application
+                    m.setInAction(false);
+                    v.verifEtEnclencheFinDeGrille(); //Sachant qu'une grille se finit toujours par une ligne/colonne complète et que les lignes sont plus longues que les colonnes (donc théoriquement, leur colorisation est plus longue) on vérifie la fin de la grille après une colorisation de ligne
+                } else {
+                    if (m.getPhaseColorisationColonneActu() <= 0) {
+                        v.changeNombre();
+                        v.restartTimerReact();
+                        m.setInAction(false);
+                    }
+                }
+            }
+        } else if(actualHandler == v.handlerColorColonne) {
+            v.grille[m.getPhaseColorisationColonneActu()][v.colonneAColorer].setBackgroundResource(R.drawable.button_background_correct);
+            m.getGrille().getCases()[m.getPhaseColorisationColonneActu()][v.colonneAColorer].setEstCorrect(true);
+            m.incrementePhaseColorisationColoneActu();
+            if(m.getPhaseColorisationColonneActu() < Grille.getNbLignes())
+                prerun();
+            else {
+                m.resetPhaseColorisationColoneActu();
+                if(Grille.getNbColonnes() >= Grille.getNbLignes()) { //Est en théorie toujours vrai dans le cadre de cette application
+                    if (m.getPhaseColorisationLigneActu() <= 0) {
+                        v.changeNombre();
+                        v.restartTimerReact();
+                        m.setInAction(false);
+                    }
+                } else {
+                    m.setInAction(false);
+                    v.verifEtEnclencheFinDeGrille();
                 }
             }
         }

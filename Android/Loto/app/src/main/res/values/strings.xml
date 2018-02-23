@@ -6,6 +6,12 @@
 
     <string name="regardez">Regardez ces nombres.</string>
 
+    <string name="plus1">+1</string>
+    <string name="plus5lig">+1/+5 (ligne)</string>
+    <string name="plus5col">+1/+5 (colonne)</string>
+    <string name="plus10">+1/+10 (ligne et colonne)</string>
+    <string name="plus50">+50 (grille)</string>
+
     <string name="completTitre">Grille complète</string>
     <string name="completTexte">Vous avez compléter cette Grille !!!!</string>
     <string name="completOk">Je suis prêt pour la prochaine !</string>

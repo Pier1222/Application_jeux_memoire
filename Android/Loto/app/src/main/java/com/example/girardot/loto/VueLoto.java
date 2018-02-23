@@ -28,8 +28,20 @@ public class VueLoto extends AppCompatActivity implements View.OnClickListener {
     protected Handler handlerDebut;
     protected Handler handlerReact;
     protected Handler evidenceErreur; //Fait passer une case au rouge une demi-seconde si le nombreActu du model y correspondait mais qu'on a rien fait
+    protected Handler handlerScore;
+    protected Handler handlerClignotementGrille;
+
+    //Les deux handlers qui suivent permettent de coloriser les lignes et le colonnes
+    protected Handler handlerColorLigne;
+    protected Handler handlerColorColonne;
+    protected int tempsColorisation;
+    protected int ligneAColorer;
+    protected int colonneAColorer;
+
 
     protected TextView showScore;
+    protected TextView montrePointsEnPlus; //Montre pourquoi des points sont gagnés
+    protected TextView montreGrilleComplete;
 
     protected LinearLayout hautGrille;
     protected Button[][] grille;
@@ -43,8 +55,16 @@ public class VueLoto extends AppCompatActivity implements View.OnClickListener {
 
     protected ControlTimer ct;
     protected ControlTimer ctClignotement;
+    protected ControlTimer ctScore;
+
+    protected ControlTimer ctLigne;
+    protected ControlTimer ctColonne;
+
 
     protected Son erreur;
+    protected Son scorePlus1;
+    protected Son scoreLigneColonne;
+    protected Son finGrille;
 
     private static String TAG = "VueLoto";
 
@@ -53,7 +73,7 @@ public class VueLoto extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loto);
 
-        //Grille.moyenneGrille(); //Permet de tester le changement de la taille de grille via une méthode
+        //Grille.petiteGrille(); //Permet de tester le changement de la taille de grille via une méthode
 
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
@@ -81,14 +101,33 @@ public class VueLoto extends AppCompatActivity implements View.OnClickListener {
         showScore = findViewById(R.id.score);
         showScore.setText(getString(R.string.debScore) + ": " + m.getScore());
 
+        montrePointsEnPlus = findViewById(R.id.explicationscore);
+        montreGrilleComplete = findViewById(R.id.explicationsgrillecomplete);
+
         ct = new ControlTimer(m, this);
         ctClignotement = new ControlTimer(m, this);
+        ctScore = new ControlTimer(m, this);
+
+        ctLigne = new ControlTimer(m, this);
+        ctColonne = new ControlTimer(m, this);
+
 
         handlerDebut = new Handler();
         handlerReact = new Handler();
         evidenceErreur = new Handler();
+        handlerScore = new Handler();
+        handlerClignotementGrille = new Handler();
+
+        handlerColorLigne = new Handler();
+        handlerColorColonne = new Handler();
+        tempsColorisation = 100;
+        ligneAColorer = -1;
+        colonneAColorer = -1;
 
         erreur = new Son(R.raw.erreur2, this);
+        scorePlus1 = new Son(R.raw.bip, this);
+        scoreLigneColonne = new Son(R.raw.correct, this);
+        finGrille = new Son(R.raw.applaudissement, this);
         ct.start(handlerDebut, 1000);
     }
 
@@ -164,6 +203,22 @@ public class VueLoto extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
+    public void verifEtEnclencheFinDeGrille() {
+        if(m.getGrille().isGrilleComplete()) {
+            finGrille.jouer();
+            m.setInAction(true);
+            m.augmenteScore(50);
+            showScore.setText(getString(R.string.debScore) + ": " + m.getScore());
+            montreGrilleComplete.setText(getString(R.string.plus50));
+            handlerReact.removeCallbacks(ct);
+            m.printAndClearStatistique();
+            ctClignotement.start(handlerClignotementGrille, 150);
+        } else {
+            changeNombre();
+            restartTimerReact();
+        }
+    }
+
     public void restartTimerReact() {
         handlerReact.removeCallbacks(ct); //Annule tous les postDelayed de handlerReact envers ct (logiquement, il doit en avoir q'un seul)
         ct.start(handlerReact, 5000);
@@ -171,28 +226,39 @@ public class VueLoto extends AppCompatActivity implements View.OnClickListener {
 
     public void changeScore() {
         int scoreEnPlus = 1;
-        int ligneAColorer = m.getGrille().nouvelleLigneComplete();
-        int colonneAColorer = m.getGrille().nouvelleColonneComplete();
+        Son sonAJouer = scorePlus1;
+        int idTextPointsEnPlus = R.string.plus1; //Représente l'id du texte qui sera utilsé (par défaut "+1"
+        ligneAColorer = m.getGrille().nouvelleLigneComplete();
+        colonneAColorer = m.getGrille().nouvelleColonneComplete();
 
         if(ligneAColorer >= 0) {
+            sonAJouer = scoreLigneColonne;
             scoreEnPlus += 5; //Points bonus pour ligne complète
             coloriseLigne(ligneAColorer);
+            idTextPointsEnPlus = R.string.plus5lig;
         }
 
         if(colonneAColorer >= 0) {
+            sonAJouer = scoreLigneColonne;
             scoreEnPlus += 5; //Points bonus pour colonne Complète
             coloriseColonne(colonneAColorer);
+            if(ligneAColorer >= 0) //Si il y a une ligne et une colonne complète
+                idTextPointsEnPlus = R.string.plus10;
+            else //Si il y a seulement une colonne complète
+                idTextPointsEnPlus = R.string.plus5col;
         }
 
-        if(m.getGrille().isGrilleComplete()) {
-            scoreEnPlus += 50;
-            handlerReact.removeCallbacks(ct);
-            m.printAndClearStatistique();
-            m.nouvelleGrille();
-            creerDialogGrilleComplete();
+        if(ligneAColorer <= 0 && colonneAColorer <= 0) { //Si rien n'a été complété
+            changeNombre();
+            restartTimerReact();
         }
+
         m.augmenteScore(scoreEnPlus);
         showScore.setText(getString(R.string.debScore) + ": " + m.getScore());
+        sonAJouer.jouer();
+        montrePointsEnPlus.setText(getString(idTextPointsEnPlus));
+        handlerScore.removeCallbacks(ctScore);
+        ctScore.start(handlerScore, 2000);
     }
 
     public void changeNombre() {
@@ -201,22 +267,82 @@ public class VueLoto extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void coloriseLigne(int numeroLigne) {
-        for(int y = 0; y < Grille.getNbColonnes(); y++) {
+        m.setInAction(true);
+        ctLigne.start(handlerColorLigne, tempsColorisation);
+        /*for(int y = 0; y < Grille.getNbColonnes(); y++) {
             grille[numeroLigne][y].setBackgroundResource(R.drawable.button_background_correct);
             m.getGrille().getCases()[numeroLigne][y].setEstCorrect(true);
-        }
+        }*/
     }
 
     public void coloriseColonne(int numeroColonne) {
-        for(int x = 0; x < Grille.getNbLignes(); x++) {
+        m.setInAction(true);
+        ctColonne.start(handlerColorColonne, tempsColorisation);
+        /*for(int x = 0; x < Grille.getNbLignes(); x++) {
             grille[x][numeroColonne].setBackgroundResource(R.drawable.button_background_correct);
             m.getGrille().getCases()[x][numeroColonne].setEstCorrect(true);
-        }
+        }*/
     }
 
     public void coloriseRouge(int x, int y) {
         grille[x][y].setBackgroundResource(R.drawable.button_background_erreur);
         m.getGrille().getCases()[x][y].setEstErreur(true);
+    }
+
+    public void colorisationAleatoire() {
+        int numeroCouleurAleatoire = 0;
+        int idCouleur = 0;
+        for(int x = 0; x < Grille.getNbLignes(); x++) {
+            for(int y = 0; y < Grille.getNbColonnes(); y++) {
+                numeroCouleurAleatoire = (int) Math.round(Math.random() * ((4 - 1) - 0) + 0);
+                switch (numeroCouleurAleatoire) {
+                    case 0:
+                        idCouleur = R.drawable.button_background_blanc;
+                        break;
+                    case 1:
+                        idCouleur = R.drawable.button_background_bleu;
+                        break;
+                    case 2:
+                        idCouleur = R.drawable.button_background_correct;
+                        break;
+                    case 3:
+                        idCouleur = R.drawable.button_background_erreur;
+                        break;
+                    default:
+                        idCouleur = R.drawable.button_background_jaune;
+                        break;
+                }
+                grille[x][y].setBackgroundResource(idCouleur);
+            }
+
+            /*numeroCouleurAleatoire = (int) Math.round(Math.random() * ((4 - 1) - 0) + 0);
+            switch (numeroCouleurAleatoire) {
+                case 0:
+                    idCouleur = R.color.blanc;
+                    break;
+                case 1:
+                    idCouleur = R.color.bleu;
+                    break;
+                case 2:
+                    idCouleur = R.color.correct;
+                    break;
+                case 3:
+                    idCouleur = R.color.erreur;
+                    break;
+                default:
+                    idCouleur = R.color.jaune;
+                    break;
+            }
+            montreGrilleComplete.setTextColor(getColor(idCouleur));*/ //GetColor requiert l'API 23
+        }
+    }
+
+    public void colorisationVertEntier() {
+        for(int x = 0; x < Grille.getNbLignes(); x++) {
+            for (int y = 0; y < Grille.getNbColonnes(); y++) {
+                grille[x][y].setBackgroundResource(R.drawable.button_background_correct);
+            }
+        }
     }
 
     public void changeButtonsCases() {
@@ -300,6 +426,7 @@ public class VueLoto extends AppCompatActivity implements View.OnClickListener {
 
             Case caseCorrespond = m.nombreActuDansGrille();
             if(caseCorrespond != null) {
+                handlerReact.removeCallbacks(ct); //Le handlerReact se met en pause le temps que les animations sont effectués ou pas
                 Log.d(TAG, "Bonne réponse !");
                 m.addNombreActuToStatistiques("RB");
                 m.nombreActuNonDispo();
@@ -311,10 +438,10 @@ public class VueLoto extends AppCompatActivity implements View.OnClickListener {
                 m.addNombreActuToStatistiques("RM");
                 erreurEnEvidence(caseCorrespond);
                 perdVieAffichage();
-            }
-            if(!m.isInAction()) { //Si la partie s'est finit par la perte d'une vie, il ne faut pas que le jeu redémarre le timerReact
-                restartTimerReact();
-                changeNombre();
+                if(!m.isInAction()) { //Si la partie s'est finit par la perte d'une vie, il ne faut pas que le jeu redémarre le timerReact
+                    changeNombre();
+                    restartTimerReact();
+                }
             }
         }
     }
