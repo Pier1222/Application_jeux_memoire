@@ -15,6 +15,7 @@ public class Model {
     private int nbTentatives;
     private int nbSecondesVerif;
     private int score;
+    private int nbClignotementsBoules;
 
     private Boule selectedBoule; //Est la boule sélectionner dont on veut changer la couleur
 
@@ -35,6 +36,7 @@ public class Model {
         score = 0;
         selectedBoule = null;
         inAction = true;
+        nbClignotementsBoules = 0;
     }
 
     public void printLignes() {
@@ -130,6 +132,14 @@ public class Model {
 
     public void setSelectedBoule(Boule selectedBoule) {
         this.selectedBoule = selectedBoule;
+    }
+
+    public void incrementenbClignotementBoules() {
+        nbClignotementsBoules++;
+    }
+
+    public int getNbClignotementsBoules() {
+        return nbClignotementsBoules;
     }
 }
 

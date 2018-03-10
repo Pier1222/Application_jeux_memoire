@@ -87,6 +87,19 @@ public class ControlTimer implements Runnable {
             else {
                 v.finVerication();
             }
+        } else if (actualHandler == v.handlerClignotementBoules) {
+            v.colorisationAleatoire();
+            m.incrementenbClignotementBoules();
+            if (m.getNbClignotementsBoules() >= 20) {
+                v.colorHaut();
+                v.colorBas();
+                v.creerDialogSequenceComplete();
+            } else {
+                prerun();
+            }
+        } else if(actualHandler == v.handlerPlusTentative) {
+            v.plusTentative.jouer();
+            v.creerDialogPlusDeTentatives();
         }
     }
 

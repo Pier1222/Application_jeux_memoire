@@ -37,11 +37,15 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
     protected Handler handlerDebut;
     protected Handler handlerFinEssaie;
     protected Handler handlerVerification;
+    protected Handler handlerClignotementBoules;
+    protected Handler handlerPlusTentative;
 
     protected ControlTimer ct;
 
     protected Son correct;
     protected Son wrong;
+    protected Son sequenceComplete;
+    protected Son plusTentative;
 
 
     //OnClickListener clickListener;
@@ -83,11 +87,15 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         handlerDebut = new Handler();
         handlerFinEssaie = new Handler();
         handlerVerification = new Handler();
+        handlerClignotementBoules = new Handler();
+        handlerPlusTentative = new Handler();
 
         initControlTimer();
 
         correct = new Son(R.raw.correct, this);
         wrong = new Son(R.raw.wrong, this);
+        sequenceComplete = new Son(R.raw.applaudissement, this);
+        plusTentative = new Son(R.raw.erreur2, this);
 
         visibiliteDebutDePartie();
     }
@@ -109,7 +117,7 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         LinearLayout lC = (LinearLayout) findViewById(R.id.centre);
         for(int i = 0; i < resultats.length; i++) {
             resultats[i] = new ImageView(getApplicationContext());
-            resultats[i].setPadding(-((Ligne.getNbBoules()*10)), 0, -(Ligne.getNbBoules()*10), 0); //Les boules sont plus ou moins espacé en fonction du nombre qu'il y a (le maximum est de pouvoir en avoir 15 au maximum)
+            resultats[i].setPadding(-((Ligne.getNbBoules()*10)), 0, -(Ligne.getNbBoules()*10 + 20), 0); //Les boules sont plus ou moins espacé en fonction du nombre qu'il y a (le maximum est de pouvoir en avoir 15 au maximum)
             resultats[i].setImageResource(R.drawable.faux);
             lC.addView(resultats[i]);
         }
@@ -236,6 +244,33 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         //ligneBoutons[i].setBackground(couleurInvalide);
     }
 
+    public void colorisationAleatoire() {
+        int numeroCouleurAleatoire = 0;
+        int idCouleur = 0;
+        for(int x = 0; x < Ligne.getNbBoules(); x++) {
+            numeroCouleurAleatoire = (int) Math.round(Math.random() * ((4 - 1) - 0) + 0);
+            switch (numeroCouleurAleatoire) {
+                case 0:
+                    idCouleur = R.drawable.bleu;
+                    break;
+                case 1:
+                    idCouleur = R.drawable.jaune;
+                    break;
+                case 2:
+                    idCouleur = R.drawable.rouge;
+                    break;
+                case 3:
+                    idCouleur = R.drawable.vert;
+                    break;
+                default:
+                    idCouleur = R.drawable.violet;
+                    break;
+            }
+            imagesHaut[x].setImageResource(idCouleur);
+            imagesBas[x].setImageResource(idCouleur);
+        }
+    }
+
     public void cacheResultats() {
         for(int i = 0; i < resultats.length; i++) {
             resultats[i].setVisibility(View.INVISIBLE);
@@ -294,7 +329,8 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
 
         if(ct.indicesFaux.isEmpty()) {
             Log.d(TAG, "Séquence complète !");
-            creerDialogSequenceComplete();
+            sequenceComplete.jouer();
+            ct.start(handlerClignotementBoules, 150);
         } else {
             m.perdTentative();
 
@@ -311,7 +347,7 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
                 tentativesRestantes.setVisibility(View.VISIBLE);
                 ct.start(handlerFinEssaie, 5000); //Ce Timer ne s'enclenche que si la partie n'est pas finie
             } else {//La partie est perdue
-                creerDialogPlusDeTentatives();
+                ct.start(handlerPlusTentative, 700);
             }
         }
     }
@@ -418,29 +454,32 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
                 debutVerification();
         } else {
             for(int i = 0; i < imagesBas.length; i++) {
-                if(view == imagesBas[i]) {
+                if(view == imagesBas[i] && m.getBas().getBoules()[i].isActive()) { //Il ne faut pas qu'une boule qui n'est plus comptabilisé dans le score puisse être modifié
                     m.setSelectedBoule(m.getBas().getBoules()[i]);
                     chooseLigne.setVisibility(View.VISIBLE);
                     colorBas();
                     return;
+
+                    //Ancienne méthode
                     //m.getBas().getBoules()[i].changeCouleur();
                     //colorBas();
                 }
             }
 
             //Le seul élément touchable à cette étape sont les boules pour choisir la couleur
-            if(view == imagesChoose[1])
-                m.getSelectedBoule().setCouleur(Couleur.JAUNE);
-            else if (view == imagesChoose[2])
-                m.getSelectedBoule().setCouleur(Couleur.ROUGE);
-            else if(view == imagesChoose[3])
-                m.getSelectedBoule().setCouleur(Couleur.VERT);
-            else if(view == imagesChoose[4])
-                m.getSelectedBoule().setCouleur(Couleur.VIOLET);
-            else
-                m.getSelectedBoule().setCouleur(Couleur.BLEU);
-            //chooseLigne.setVisibility(View.GONE);
-            colorBas();
+            if(m.getSelectedBoule() != null) {
+                if (view == imagesChoose[1])
+                    m.getSelectedBoule().setCouleur(Couleur.JAUNE);
+                else if (view == imagesChoose[2])
+                    m.getSelectedBoule().setCouleur(Couleur.ROUGE);
+                else if (view == imagesChoose[3])
+                    m.getSelectedBoule().setCouleur(Couleur.VERT);
+                else if (view == imagesChoose[4])
+                    m.getSelectedBoule().setCouleur(Couleur.VIOLET);
+                else if (view == imagesChoose[0]) //Remplace le simple else car si on touchait une des boules du bas NON ACTIVE, celle actuellement sélectionné devennait bleue...
+                    m.getSelectedBoule().setCouleur(Couleur.BLEU);
+                colorBas();
+            }
         }
     }
 }
