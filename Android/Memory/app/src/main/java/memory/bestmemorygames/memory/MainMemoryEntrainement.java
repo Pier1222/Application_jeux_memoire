@@ -23,12 +23,12 @@ public class MainMemoryEntrainement extends AppCompatActivity {
     //Array for images
     Integer[] cardsArray = {101,102,103,104,105,106,201,202,203,204,205,206};
 
-    int image101,image102,image103,image104,image105,image106,image201,image202,image203,image204,image205,image206;
+    int image101,image102,image103,image104,image105,image106;
 
     int firstCards, secondCards;
     int clickFirst, clickSecond;
-    int cardNumber =1;
-    int turn =1;
+    int cardNumber = 1;
+    int turn =1 ;
     int playerPoints = 0;
 
     @Override
@@ -165,13 +165,6 @@ public class MainMemoryEntrainement extends AppCompatActivity {
         image104 = R.mipmap.ic_image104;
         image105 = R.mipmap.ic_image105;
         image106 = R.mipmap.ic_image106;
-
-        image201 = R.mipmap.ic_image201;
-        image202 = R.mipmap.ic_image202;
-        image203 = R.mipmap.ic_image203;
-        image204 = R.mipmap.ic_image204;
-        image205 = R.mipmap.ic_image205;
-        image206 = R.mipmap.ic_image206;
     }
 
     private void checkEnd(){
@@ -311,7 +304,7 @@ public class MainMemoryEntrainement extends AppCompatActivity {
     }
 
     private void doStuff(ImageView iv, int card){
-        if(cardsArray[card]==101){
+        /*if(cardsArray[card]==101){
             iv.setImageResource(image101);
         }else if(cardsArray[card]==102){
             iv.setImageResource(image102);
@@ -335,7 +328,7 @@ public class MainMemoryEntrainement extends AppCompatActivity {
             iv.setImageResource(image205);
         }else if(cardsArray[card]==206){
             iv.setImageResource(image206);
-        }
+        }*/
 
         if(cardNumber ==1){
             firstCards = cardsArray[card];
@@ -346,9 +339,9 @@ public class MainMemoryEntrainement extends AppCompatActivity {
             clickFirst = card;
 
             iv.setEnabled(false);
-        }else if (cardNumber ==2){
+        } else if (cardNumber == 2){
             secondCards = cardsArray[card];
-            if(secondCards>200){
+            if(secondCards > 200){
                 secondCards = secondCards-100;
             }
             cardNumber=1;

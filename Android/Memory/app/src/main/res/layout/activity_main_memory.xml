@@ -31,10 +31,10 @@
             </android.support.design.widget.AppBarLayout>
 
             <TextView
-                android:id="@+id/tv_p1"
+                android:id="@+id/score"
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
-                android:text="Points : 0"
+                android:text="@string/debScore"
                 android:textColor="#000000"
                 android:textSize="26sp"
                 tools:ignore="HardcodedText,MissingConstraints"
