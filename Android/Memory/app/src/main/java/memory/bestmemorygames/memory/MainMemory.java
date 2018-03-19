@@ -20,19 +20,34 @@ import memory.bestmemorygames.R;
 
 public class MainMemory extends AppCompatActivity implements View.OnClickListener {
 
+    //Images normales
     protected int image101,image102,image103,image104,image105,image106;
     protected int[] images;
+
+    //Images entourées de vert
+    protected int image101C,image102C,image103C,image104C,image105C,image106C;
+    protected int[] imagesCorrect;
+
+    //Images entrourées de rouge
+    protected int image101W,image102W,image103W,image104W,image105W,image106W;
+    protected int[] imagesWrong;
 
     protected ImageView[][] grilleCartes;
     protected LinearLayout hautGrilleCarte;
     protected TextView showScore;
 
+    protected ImageView[] imageVies;
+    protected LinearLayout vies;
+
     protected Son retournement;
     protected Son paire;
     protected Son pasPaire;
     protected Son toutesCartesRetournees;
+    protected Son plusVies;
 
-    protected Handler handlerCache;
+    protected Handler handlerClignotementCorrect;
+    protected Handler handlerClignotementWrong;
+    protected Handler handlerPerdue;
     protected ControlTimer ct;
 
     protected Model m;
@@ -56,12 +71,19 @@ public class MainMemory extends AppCompatActivity implements View.OnClickListene
         frontOfCardsRessources();
         createGrilleCartes();
 
-        retournement = new Son(R.raw.bip, this); //Son à changer
+        vies = findViewById(R.id.vies);
+        createVies();
+        changeAffichageVies();
+
+        retournement = new Son(R.raw.carte, this); //Son à changer
         paire = new Son(R.raw.correct, this);
         pasPaire = new Son(R.raw.wrong, this);
         toutesCartesRetournees = new Son(R.raw.applaudissement, this);
+        plusVies = new Son(R.raw.erreur2, this);
 
-        handlerCache = new Handler();
+        handlerClignotementCorrect = new Handler();
+        handlerClignotementWrong = new Handler();
+        handlerPerdue = new Handler();
         ct = new ControlTimer(m, this);
     }
 
@@ -89,6 +111,31 @@ public class MainMemory extends AppCompatActivity implements View.OnClickListene
         //revelerCartes();
     }
 
+    public void createVies() {
+        imageVies = new ImageView[Model.getNbViesMax()];
+        for(int i = 0; i < Model.getNbViesMax(); i++) {
+            imageVies[i] = new ImageView(getApplicationContext());
+            vies.addView(imageVies[i]);
+        }
+    }
+
+    public void changeAffichageVies() {
+        for(int i = 0; i < m.getNbVies(); i++) { //Vies actuelles
+            imageVies[i].setImageResource(R.drawable.vietete);
+        }
+        for(int i = m.getNbVies(); i < Model.getNbViesMax(); i++) { //Vies perdues
+            imageVies[i].setImageResource(R.drawable.vieteteperdue);
+        }
+    }
+
+    public void derniereVieBarree() {
+        imageVies[m.getNbVies()].setImageResource(R.drawable.vieteteperdue);
+    }
+
+    public void derniereViePasBarree() {
+        imageVies[m.getNbVies()].setImageResource(R.drawable.vietete);
+    }
+
     public void revelerCartes() {
         for(int x = 0; x < Model.getNbCartesLigne(); x++) {
             for(int y = 0; y < Model.getNbCartesColonne(); y++) {
@@ -99,6 +146,14 @@ public class MainMemory extends AppCompatActivity implements View.OnClickListene
 
     public void revelerCarte(int x, int y) {
         grilleCartes[x][y].setImageResource(images[m.getCartes()[x][y]]);
+    }
+
+    public void revelerCorrectCarte(int x, int y) {
+        grilleCartes[x][y].setImageResource(imagesCorrect[m.getCartes()[x][y]]);
+    }
+
+    public void revelerWrongCarte(int x, int y) {
+        grilleCartes[x][y].setImageResource(imagesWrong[m.getCartes()[x][y]]);
     }
 
     public void cacherCartes() {
@@ -125,9 +180,29 @@ public class MainMemory extends AppCompatActivity implements View.OnClickListene
         if(images.length != Model.getNbImages()) {
             Log.e(TAG, "Le nombre d'images différentes dans le Model n'est pas correct");
         }
+
+
+        image101C = R.mipmap.ic_image101_c;
+        image102C = R.mipmap.ic_image102_c;
+        image103C = R.mipmap.ic_image103_c;
+        image104C = R.mipmap.ic_image104_c;
+        image105C = R.mipmap.ic_image105_c;
+        image106C = R.mipmap.ic_image106_c;
+
+        imagesCorrect = new int[]{image101C, image102C, image103C, image104C, image105C, image106C};
+
+
+        image101W = R.mipmap.ic_image101_w;
+        image102W = R.mipmap.ic_image102_w;
+        image103W = R.mipmap.ic_image103_w;
+        image104W = R.mipmap.ic_image104_w;
+        image105W = R.mipmap.ic_image105_w;
+        image106W = R.mipmap.ic_image106_w;
+
+        imagesWrong = new int[]{image101W, image102W, image103W, image104W, image105W, image106W};
     }
 
-    private void checkEnd(){
+    public void checkEnd(){
         if(m.ifAllCartesRevelees()){
             toutesCartesRetournees.jouer();
             final EditText name = new EditText(this);
@@ -139,10 +214,10 @@ public class MainMemory extends AppCompatActivity implements View.OnClickListene
 
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainMemory.this);
             alertDialogBuilder
-                    .setMessage("Bravo vous avez gagné !!\n" +"Vous avez eu "+ m.getScore() + " points.\n"+"Votre nom :")
+                    .setMessage(getString(R.string.cartesRevelees) + "\n" + getString(R.string.points1) + " " + m.getScore() + " " + getString(R.string.points2) + "\n" + getString(R.string.demandeNom))
                     .setView(name)
                     .setCancelable(false)
-                    .setPositiveButton("Rejouer", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(R.string.rejouer), new DialogInterface.OnClickListener() {
 
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -151,7 +226,7 @@ public class MainMemory extends AppCompatActivity implements View.OnClickListene
                             finish();
                         }
                     })
-                    .setNegativeButton("Arrêter", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getString(R.string.revenir), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent intent = new Intent(getApplicationContext(), PageAccueilActivity.class);
@@ -162,6 +237,40 @@ public class MainMemory extends AppCompatActivity implements View.OnClickListene
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
         }
+    }
+
+    public void fenetreGameOver() {
+        final EditText name = new EditText(this);
+        name.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        name.setLayoutParams(lp);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainMemory.this);
+        alertDialogBuilder
+                .setMessage(getString(R.string.manqueVies) + "\n" + getString(R.string.points1) + " " + m.getScore() + " " + getString(R.string.points2) + "\n" + getString(R.string.demandeNom))
+                .setView(name)
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.rejouer), new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(getApplicationContext(), MainMemory.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .setNegativeButton(getString(R.string.revenir), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(getApplicationContext(), PageAccueilActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     private void doStuff(ImageView iv){
@@ -184,18 +293,18 @@ public class MainMemory extends AppCompatActivity implements View.OnClickListene
         Son ajouer = retournement;
 
         if(m.addCartesActu(posX, posY)) {
+            m.setInAction(true);
             if(m.isPaire()) {
-                System.out.println("Yeah c'est une paire !");
+                Log.d(TAG, "Yeah c'est une paire !");
                 ajouer = paire;
-                m.resetCartesActu();
                 m.augmenteScore();
                 changeScore();
-                checkEnd();
+                ct.start(handlerClignotementCorrect, 150);
             } else {
-                System.out.println("SHOUT !");
+                Log.d(TAG, "Non, ce n'est pas une paire !");
                 ajouer = pasPaire;
-                m.setInAction(true);
-                ct.start(handlerCache, 1500);
+                m.perdVie();
+                ct.start(handlerClignotementWrong, 150);
             }
         }
         ajouer.jouer();

@@ -1,9 +1,15 @@
 package memory.bestmemorygames.memory;
 
+import android.util.Log;
+
 public class Model {
 
     private static int nbCartesLigne = 3;
     private static int nbCartesColonne = 4;
+
+    private static int NB_VIES_MAX = 7;
+    private int nbVies;
+
     private static int[] paires = new int[]{1, 2, 2, 0, 1, 0};
     private static final int NB_IMAGES = 6; //Permet de savoir dans quel case du tableau "images" de la Vue on devra regarder
 
@@ -11,10 +17,14 @@ public class Model {
     private boolean[][] isDos;
     private int[][] cartes;
     private int score;
+    private int nbClignotements;
 
     private boolean inAction;
 
+    private static final String TAG = "Model";
+
     public Model() {
+        nbVies = NB_VIES_MAX;
         cartes = new int[nbCartesLigne][nbCartesColonne];
         affecterPaires();
         cartesActu = new int[4];
@@ -22,6 +32,7 @@ public class Model {
         isDos = new boolean[nbCartesLigne][nbCartesColonne];
         initIsDos();
         score = 0;
+        resetClignotement();
         inAction = false;
     }
 
@@ -66,7 +77,7 @@ public class Model {
         }
 
         for(int i = 0; i < nbCartes.length; i++) {
-            System.out.println("Cartes pour l'image: " + nbCartes[i]);
+            Log.d(TAG, "Cartes pour l'image: " + nbCartes[i]);
         }
         affecterCartes(nbCartes);
     }
@@ -124,7 +135,7 @@ public class Model {
     public static void grandMemory() {
         nbCartesLigne = 4;
         nbCartesColonne = 6;
-        paires = new int[]{2, 3, 2, 1, 1, 3};
+        paires = new int[]{2, 3, 2, 0, 2, 3};
     }
 
     public static int getNbCartesLigne() {
@@ -165,12 +176,36 @@ public class Model {
         }
     }
 
+    public void perdVie() {
+        nbVies--;
+    }
+
+    public int getNbVies() {
+        return nbVies;
+    }
+
+    public static int getNbViesMax() {
+        return NB_VIES_MAX;
+    }
+
     public void augmenteScore() {
         score++;
     }
 
     public int getScore() {
         return score;
+    }
+
+    public void augmenteClignotements() {
+        nbClignotements++;
+    }
+
+    public void resetClignotement() {
+        nbClignotements = 0;
+    }
+
+    public int getNbClignotements() {
+        return nbClignotements;
     }
 
     public int[] getCartesActu() {

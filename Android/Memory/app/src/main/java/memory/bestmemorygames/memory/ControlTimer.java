@@ -2,10 +2,6 @@ package memory.bestmemorygames.memory;
 
 
 import android.os.Handler;
-import android.util.Log;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 public class ControlTimer implements Runnable {
 
@@ -35,18 +31,66 @@ public class ControlTimer implements Runnable {
     }
 
     public void run() {
-        if(actualHandler == v.handlerCache) {
+        if(actualHandler == v.handlerClignotementCorrect || actualHandler == v.handlerClignotementWrong) {
             int x1 = m.getCartesActu()[0];
             int y1 = m.getCartesActu()[1];
             int x2 = m.getCartesActu()[2];
             int y2 = m.getCartesActu()[3];
 
-            v.cacherCarte(x1, y1);
-            v.cacherCarte(x2, y2);
-            v.retournement.jouer();
-            m.retourneToDos();
-            m.resetCartesActu();
-            m.setInAction(false);
+            if (actualHandler == v.handlerClignotementWrong) {
+                if(m.getNbClignotements()%2 == 0) {
+                    v.revelerWrongCarte(x1, y1);
+                    v.revelerWrongCarte(x2, y2);
+                    v.derniereVieBarree();
+                } else {
+                    v.revelerCarte(x1, y1);
+                    v.revelerCarte(x2, y2);
+                    v.derniereViePasBarree();
+                }
+
+                m.augmenteClignotements();
+
+                if(m.getNbClignotements() > 10) {
+                    v.changeAffichageVies();
+                    m.retourneToDos();
+                    m.resetCartesActu();
+                    m.resetClignotement();
+                    if(m.getNbVies() > 0) {
+                        v.cacherCarte(x1, y1);
+                        v.cacherCarte(x2, y2);
+                        v.retournement.jouer();
+                        m.setInAction(false);
+                    } else {
+                        v.plusVies.jouer();
+                        v.revelerCartes(); //On montre toutes les cartes car le joueur à perdu
+                        start(v.handlerPerdue, 5000);
+                    }
+                } else
+                    prerun();
+
+            } else if (actualHandler == v.handlerClignotementCorrect) {
+                if(m.getNbClignotements()%2 == 0) {
+                    v.revelerCorrectCarte(x1, y1);
+                    v.revelerCorrectCarte(x2, y2);
+                } else {
+                    v.revelerCarte(x1, y1);
+                    v.revelerCarte(x2, y2);
+                }
+
+                m.augmenteClignotements();
+
+                if(m.getNbClignotements() > 5) {
+                    v.revelerCarte(x1, y1);
+                    v.revelerCarte(x2, y2);
+                    m.resetCartesActu();
+                    m.resetClignotement();
+                    v.checkEnd();
+                    m.setInAction(false);
+                } else
+                    prerun();
+            }
+        } else if (actualHandler == v.handlerPerdue) {
+            v.fenetreGameOver();
         }
     }
 }

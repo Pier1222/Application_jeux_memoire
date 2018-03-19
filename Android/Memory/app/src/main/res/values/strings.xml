@@ -141,4 +141,21 @@
     <string name="perduTitre">Perdue !</string>
     <string name="perduTexte">Vous avez perdu tous vos vies...</string>
     <string name="perduOk">Aie...</string>
+
+
+
+
+
+
+
+
+    <string name="cartesRevelees">Bravo vous avez gagné !!</string>
+    <string name="manqueVies">Mince vous avez perdue toute vos vies !!</string>
+    <string name="points1">Vous avez eu</string>
+    <string name="points2">points.</string>
+    <string name="demandeNom">Votre nom :</string>
+    <string name="rejouer">Rejouer</string>
+    <string name="revenir">Revenir au menu</string>
+
+
 </resources>
