@@ -83,7 +83,7 @@ public class PageAccueilActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 //finish();
                                 break;
-                            case 1: Intent intent1 = new Intent(getApplicationContext(), memory.bestmemorygames.piano.Vue.class);
+                            case 1: Intent intent1 = new Intent(getApplicationContext(), memory.bestmemorygames.piano.VueEntrainement.class);
                                 startActivity(intent1);
                                 //finish();
                                 break;
@@ -121,7 +121,7 @@ public class PageAccueilActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 //finish();
                                 break;
-                            case 1: Intent intent1 = new Intent(getApplicationContext(), memory.bestmemorygames.boulier.Vue.class);
+                            case 1: Intent intent1 = new Intent(getApplicationContext(), memory.bestmemorygames.boulier.VueEntrainement.class);
                                 startActivity(intent1);
                                 //finish();
                                 break;
@@ -159,7 +159,7 @@ public class PageAccueilActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 //finish();
                                 break;
-                            case 1: Intent intent1 = new Intent(getApplicationContext(), memory.bestmemorygames.loto.VueLoto.class);
+                            case 1: Intent intent1 = new Intent(getApplicationContext(), memory.bestmemorygames.loto.VueLotoEntrainement.class);
                                 startActivity(intent1);
                                 //finish();
                                 break;
@@ -196,7 +196,7 @@ public class PageAccueilActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 //finish();
                                 break;
-                            case 1: Intent intent1 = new Intent(getApplicationContext(), memory.bestmemorygames.nombres.MainActivity.class);
+                            case 1: Intent intent1 = new Intent(getApplicationContext(), memory.bestmemorygames.nombres.MainActivityEntrainement.class);
                                 startActivity(intent1);
                                 //finish();
                                 break;

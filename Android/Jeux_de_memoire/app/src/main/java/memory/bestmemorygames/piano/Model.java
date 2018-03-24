@@ -6,6 +6,7 @@ import memory.bestmemorygames.R;
 public class Model {
     //Rappel: dans le Model: TOUT en private
     private final int NB_TOUCHES = 13; //A cause de l'esthétique d'un piano, il ne sera pas possible de faire varier le nom de touche
+    private static boolean montreToucheOrdi = true; //Permet de savoir si l'utilisateur ne peut compter que sur ses oreilles ou pas pour mémoriser la séquence
 
     private int score;
     private int nbTouchesReussies; //Indique le nombre de touches réussites à la séquence raté
@@ -85,6 +86,14 @@ public class Model {
 
     public boolean verifToucheJoueur(Touche touche) { //Vérifie si la touche correspond à celle attendu actuellement dans la séquence
         return touche == sequenceOrdi[placeSequence];
+    }
+
+    public static boolean isMontreToucheOrdi() {
+        return montreToucheOrdi;
+    }
+
+    public static void setMontreToucheOrdi(boolean montreToucheOrdi) {
+        Model.montreToucheOrdi = montreToucheOrdi;
     }
 
     public int getScore() {

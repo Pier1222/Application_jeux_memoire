@@ -20,8 +20,7 @@ public class Model {
     private boolean inAction;
 
     public Model() {
-        setViesAtMax();
-        score = 0;
+        reset();
         nombreActu = 0;
         nouvelleGrille();
         statistiques = new ArrayList<String>();
@@ -77,6 +76,11 @@ public class Model {
             System.out.println("Le scoreEnPlus ne peut pas être négatif");
         }
         score += scoreEnplus;
+    }
+
+    public void reset() {
+        score = 0;
+        setViesAtMax();
     }
 
     public void nouvelleGrille() { //Génère une nouvelle Grille aléatoire et prépare le début de la manche suivante

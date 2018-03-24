@@ -3,10 +3,11 @@ package memory.bestmemorygames.loto;
 
 public class Grille {
 
-    private static int NB_CASES_ACTIVES = 12;
+    private static int NB_CASES_ACTIVES = 9;
     private static int NB_LIGNES = 3;
-    private static int NB_COLONNES = 6;
-    private static int NB_MAX = 30; //Indique le plus gros nombre qu'on peut avoir
+    private static int NB_COLONNES = 4;
+    private static int NB_MAX = 20; //Indique le plus gros nombre qu'on peut avoir
+
     private Case[][] cases;
     private boolean[] valeursDispo; //Les cases auront une valeur entre 1 et NB_MAX, ainsi valeursDispo[0] indique si la valeur 1 peut être prise par une case
     //ATTENTION ! en effet valeursDispo[0] est bien pour 1, ainsi valeursDispo[i] représente i+1

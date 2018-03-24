@@ -16,19 +16,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
-                <Button
-                    android:id="@+id/facile"
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    android:textColor="@color/correct"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="monospace"
-                    android:text="@string/pianodifficulte1"
-                    android:textSize="17sp"
-                    android:textStyle="bold" />
-
                 <Button
                     android:id="@+id/moyen"
                     style="@style/Widget.AppCompat.Button.Borderless.Colored"

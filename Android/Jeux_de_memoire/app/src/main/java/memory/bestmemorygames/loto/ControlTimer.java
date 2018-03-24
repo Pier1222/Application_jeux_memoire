@@ -87,7 +87,6 @@ public class ControlTimer implements Runnable {
             if(m.getNbClignotementsGrille() >= 20) {
                 v.montreGrilleComplete.setText("");
                 v.colorisationVertEntier();
-                m.nouvelleGrille();
                 v.creerDialogGrilleComplete();
             } else {
                 prerun();

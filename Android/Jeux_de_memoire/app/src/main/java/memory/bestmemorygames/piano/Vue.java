@@ -6,9 +6,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import memory.bestmemorygames.R;
@@ -143,19 +146,40 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void creerDialogPerdu() {
+        final EditText name = new EditText(this);
+        name.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        name.setLayoutParams(lp);
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.perduTexte1p1) + "\n" + getString(R.string.perduTexte1p2) + " " + m.getScore() + " " + getString(R.string.perduTexte2) + " " + m.getNbTouchesReussies() + " " + getString(R.string.perduTexte3));
+        builder.setView(name);
+        builder.setMessage(getString(R.string.perduTexte1p1) + "\n" + getString(R.string.perduTexte1p2) + " " + m.getScore() + " " + getString(R.string.perduTexte2) + " " + m.getNbTouchesReussies() + " " + getString(R.string.perduTexte3) + "\n" + getString(R.string.demandeNom));
         builder.setCancelable(false);
         builder.setTitle(getString(R.string.perduTitre));
-        builder.setPositiveButton(getString(R.string.perduOk), new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.rejouer), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d(TAG, "Perdu");
-                //creerDialogReset();
+                reset();
+            }
+        });
+        builder.setNegativeButton(getString(R.string.revenir), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "Revenir Menu");
+                finish();
             }
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public void reset() {
+        m.reinitPiano();
+        m.setTourJoueur(false);
+        finPartie();
     }
 
 

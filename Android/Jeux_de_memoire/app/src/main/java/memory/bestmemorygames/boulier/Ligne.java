@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Ligne {
-    private static int NB_BOULES = 10;
+    private static int NB_BOULES = 7;
     private Boule[] boules;
 
     public Ligne(boolean isColored) { //Constructeur qui initialise une Ligne active colorée aléatoirement ou pas colorée

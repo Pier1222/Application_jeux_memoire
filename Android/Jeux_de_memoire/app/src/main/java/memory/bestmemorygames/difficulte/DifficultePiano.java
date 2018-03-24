@@ -7,25 +7,18 @@ import android.widget.Button;
 
 import memory.bestmemorygames.R;
 import memory.bestmemorygames.boulier.Ligne;
+import memory.bestmemorygames.piano.Model;
 
 public class DifficultePiano extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_difficulte_piano);
-        final Button buttonFacile = (Button) findViewById(R.id.facile);
-        buttonFacile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Méthode facile
-                finish();
-            }
-        });
         final Button buttonMoyen = (Button) findViewById(R.id.moyen);
         buttonMoyen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Méthode moyen
+                Model.setMontreToucheOrdi(true);
                 finish();
             }
         });
@@ -33,7 +26,7 @@ public class DifficultePiano extends AppCompatActivity {
         buttonDifficile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Méthode difficle
+                Model.setMontreToucheOrdi(false);
                 finish();
             }
         });

@@ -8,7 +8,7 @@ import android.media.SoundPool;
 import android.util.Log;
 
 
-public class Son  {
+public class Son {
     private int sonId;
     private static final String TAG = "Son";
     private SoundPool soundPool;
@@ -33,17 +33,16 @@ public class Son  {
 
     public void jouer() {
         if (loaded)
-            soundPool.play(sonId, 100, 100, 0, 0, 1);
+            soundPool.play(sonId, 1, 1, 0, 0, 1);
         else
             Log.d(TAG, "Le son n'est pas encore prêt");
     }
 
     public void jouerEnBoucle() {
-        //s1.loop();
+        soundPool.play(sonId, 1, 1, 0, -1, 0);
     }
 
     public void arreter() {
-        //s1.stop();
+        soundPool.stop(sonId);
     }
 }
-

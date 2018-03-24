@@ -56,7 +56,10 @@ public class ControlTimer implements Runnable {
                     m.addSequenceOrdi(m.getPlaceSequence() - 1, m.getTouches()[position]); //Important de mettre une touche DEJA présente dans les touches du model
                 }
 
-                v.lanceAnimationBouton(position, R.drawable.button_background_tourordi); //Remplace le DoClick du prototype java
+                if(Model.isMontreToucheOrdi()) //Se déclenche uniquement en difficulté normal
+                    v.lanceAnimationBouton(position, R.drawable.button_background_tourordi); //Remplace le DoClick du prototype java
+                else
+                    v.sonsPiano[position].jouer();
 
                 Log.d(TAG, "Touche " + m.getPlaceSequence() + "/" + m.getTailleSequence() + ": position: " + (position + 1));
                 m.avanceSequence();
@@ -81,9 +84,6 @@ public class ControlTimer implements Runnable {
                 }
             } else if (actualHandler == v.handlerErreur) {
                 v.creerDialogPerdu();
-                m.reinitPiano();
-                m.setTourJoueur(false);
-                v.finPartie();
             }
         } else if (actualHandler == v.handlerCorrect) {
             m.succesReproductionSequence();

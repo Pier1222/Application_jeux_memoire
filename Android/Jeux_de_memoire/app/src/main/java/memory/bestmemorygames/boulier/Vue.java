@@ -5,9 +5,11 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -320,7 +322,6 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void finVerication() {
-
         int scoreEnPlus = changeCalculScore(ct.nbBoulesJustes, ct.nbBoulesFausses);
         m.augmenteScore(scoreEnPlus);
         visibiliteVerification();
@@ -342,13 +343,17 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
             Log.d(TAG, indicesFauxString);
 
             m.printLignes();
-            if(m.getNbTentatives() > 0) {
-                changeTentativesRestantes();
-                tentativesRestantes.setVisibility(View.VISIBLE);
-                ct.start(handlerFinEssaie, 5000); //Ce Timer ne s'enclenche que si la partie n'est pas finie
-            } else {//La partie est perdue
-                ct.start(handlerPlusTentative, 700);
-            }
+            verifGameOver();
+        }
+    }
+
+    public void verifGameOver() {
+        if(m.getNbTentatives() > 0) {
+            changeTentativesRestantes();
+            tentativesRestantes.setVisibility(View.VISIBLE);
+            ct.start(handlerFinEssaie, 5000); //Ce Timer ne s'enclenche que si la partie n'est pas finie
+        } else {//La partie est perdue
+            ct.start(handlerPlusTentative, 700);
         }
     }
 
@@ -383,17 +388,32 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void creerDialogSequenceComplete() {
+        final EditText name = new EditText(this);
+        name.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        name.setLayoutParams(lp);
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.sequenceCompleteTexte1) +
                 "\n" + getString(R.string.scoreFinal) + ": " + m.getScore() + "." +
-                "\n" + getString(R.string.sequenceCompleteTexte2) + ": " + (Model.getNbTentativesMax() - m.getNbTentatives() + 1 + "."));
+                "\n" + getString(R.string.sequenceCompleteTexte2) + ": " + (Model.getNbTentativesMax() - m.getNbTentatives() + 1) + "." + "\n" + getString(R.string.demandeNom));
+        builder.setView(name);
         builder.setCancelable(false);
         builder.setTitle(getString(R.string.sequenceCompleteTitre));
-        builder.setPositiveButton(getString(R.string.sequenceCompleteOk), new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.rejouer), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d(TAG, "Séquence complète");
-                creerDialogReset();
+                reset();
+            }
+        });
+        builder.setNegativeButton(getString(R.string.revenir), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "Revenir menu");
+                finish();
             }
         });
         AlertDialog dialog = builder.create();
@@ -401,23 +421,38 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void creerDialogPlusDeTentatives() {
+        final EditText name = new EditText(this);
+        name.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        name.setLayoutParams(lp);
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.tentativeEpuiseesTexte) +
-                "\n" + getString(R.string.scoreFinal) + ": " + m.getScore() + ".");
+                "\n" + getString(R.string.scoreFinal) + ": " + m.getScore() + "." + "\n" + getString(R.string.demandeNom));
+        builder.setView(name);
         builder.setCancelable(false);
         builder.setTitle(getString(R.string.tentativeEpuiseesTitre));
-        builder.setPositiveButton(getString(R.string.tentativeEpuisseOk), new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.rejouer), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.d(TAG, "Plus de tentatives");
-                creerDialogReset();
+                reset();
+            }
+        });
+        builder.setNegativeButton(getString(R.string.revenir), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "Revenir menu");
+                finish();
             }
         });
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
-    public void creerDialogReset() {
+    /*public void creerDialogReset() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.resetTexte));
         builder.setCancelable(false);
@@ -438,7 +473,7 @@ public class Vue extends AppCompatActivity implements View.OnClickListener {
         });
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
+    }*/
 
     //Partie contrôleur
     @Override

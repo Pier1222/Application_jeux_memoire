@@ -7,9 +7,13 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import memory.bestmemorygames.R;
@@ -18,9 +22,26 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    Button tabButton[] =new Button[24];
+    ArrayList buttonArray =new ArrayList<Button>();
+    ArrayList caseAcocher=new ArrayList<Button>();
+    Integer nombreDecase=1;
+    Drawable color;
+    private long timer=3000;
+    private long timeMillis=timer;
+    private boolean timerRunning;
+    private int score=0;
+    private static int MIN_DEBUT=10;
+    private static int MAX_DEBUT=20;
+    private static int MIN_INTERVAL=1;
+    private static int MAX_INTERVAL=9;
+    protected Son error;
+    protected Son win;
+    protected Handler handlerFin;
+    protected ControlTimer ct;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_nombres);
         error=new Son(R.raw.erreur2,this);
@@ -32,34 +53,18 @@ public class MainActivity extends AppCompatActivity {
         changeText();
         startTimer();
         color=tabButton[0].getBackground();
+        handlerFin = new Handler();
+        ct = new ControlTimer(null, this);
     }
 
-    Button tabButton[] =new Button[24];
-    ArrayList buttonArray =new ArrayList<Button>();
-    ArrayList caseAcocher=new ArrayList<Button>();
-    Integer nombreDecase=1;
-    Drawable color;
-    private long timer=3000;
-    private long timeMillis=timer;
-    private boolean timerRunning;
-    private int score=0;
-    private static int MIN_DEBUT=1;
-    private static int MAX_DEBUT=5;
-    private static int MIN_INTERVAL=1;
-    private static int MAX_INTERVAL=3;
-    protected Son error;
-    protected Son win;
 
-
-
-
-     public void UpdateId(){
+    public void UpdateId(){
          for (int i = 0; i < 24; i++) {
              tabButton[i] = new Button(this);
              int id=getResources().getIdentifier("button"+i, "id", getPackageName());
              tabButton[i].setId(id);
          }
-     }
+    }
     public int genenAlea(){
         int c = (int) (Math.random() * buttonArray.size());
         return c;
@@ -150,26 +155,20 @@ public class MainActivity extends AppCompatActivity {
 
              TextView tv;
              tv=findViewById(R.id.textField);
-             tv.setText("Score: "+score);
+             tv.setText(getString(R.string.debScore) + ": "+score);
 
-         }else{
+         } else {
              error.jouer();
              buttonCliqued.setBackgroundColor(Color.RED);
              buttonACliquer.setBackgroundColor(Color.GREEN);
              displayCaseRestante();
              disableAllButton();
-             nombreDecase=1;
-             Button restartButton;
-             restartButton=findViewById(R.id.restart);
-             restartButton.setText(getString(R.string.Recommencer));
-             restartButton.setVisibility(View.VISIBLE);
-             restartButton.setEnabled(true);
-             alert();
+             ct.start(handlerFin, 5000);
          }
 
         if (caseAcocher.isEmpty()){
-             win.jouer();
-             clearBoard();
+            win.jouer();
+            clearBoard();
             nombreDecase++;
             assigneCase(nombreDecase);
             changeText();
@@ -177,9 +176,7 @@ public class MainActivity extends AppCompatActivity {
             timer=timer-200;
             startTimer();
 
-
         }
-
     }
 
     private void displayCaseRestante() {
@@ -196,31 +193,50 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 timeMillis = millisUntilFinished;
-
             }
-
             @Override
             public void onFinish() {
-
                 timerRunning = false;
                 cliquableButton();
-
             }
         }.start();
 
         timerRunning = true;
-
     }
+
+    public void beforeAlert() {
+        nombreDecase=1;
+        Button restartButton;
+        restartButton=findViewById(R.id.restart);
+        restartButton.setText(getString(R.string.Recommencer));
+        restartButton.setVisibility(View.VISIBLE);
+        restartButton.setEnabled(true);
+        alert();
+    }
+
     public void alert() {
+        final EditText name = new EditText(this);
+        name.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        name.setLayoutParams(lp);
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getString(R.string.LoseText) + " " + score);
+        builder.setMessage(getString(R.string.LoseText) + " " + score + "\n" + getString(R.string.demandeNom));
+        builder.setView(name);
         builder.setCancelable(false);
         builder.setTitle(getString(R.string.Title));
-
-        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.rejouer), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
+            }
+        });
+        builder.setNegativeButton(getString(R.string.revenir), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
             }
         });
 

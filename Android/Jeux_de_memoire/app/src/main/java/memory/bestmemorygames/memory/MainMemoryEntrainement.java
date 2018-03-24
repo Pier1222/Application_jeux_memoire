@@ -18,7 +18,7 @@ import android.widget.TextView;
 import memory.bestmemorygames.PageAccueilActivity;
 import memory.bestmemorygames.R;
 
-public class MainMemoryEntrainement extends MainMemory implements View.OnClickListener {
+public class MainMemoryEntrainement extends MainMemory {
 
     //Annule l'affichage des vies
     public void createVies() {}
@@ -31,4 +31,33 @@ public class MainMemoryEntrainement extends MainMemory implements View.OnClickLi
         retournesMauvaisesCartes(x1, y1, x2, y2);
     }
 
+    public void checkEnd() {
+        if(m.ifAllCartesRevelees()) {
+            toutesCartesRetournees.jouer();
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder
+                    .setTitle(getString(R.string.endEntrainementTitre))
+                    .setMessage(getString(R.string.endEntrainementTexte))
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.rejouer), new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(getApplicationContext(), MainMemory.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.revenir), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(getApplicationContext(), PageAccueilActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
+    }
 }
