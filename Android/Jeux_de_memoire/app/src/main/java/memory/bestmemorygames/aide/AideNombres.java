@@ -29,7 +29,17 @@ public class AideNombres extends AppCompatActivity {
         buttonEntrainement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), memory.bestmemorygames.nombres.MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), memory.bestmemorygames.nombres.MainActivityEntrainement.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        final Button buttonDifficulte = (Button) findViewById(R.id.id_button_difficulte);
+        buttonDifficulte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), memory.bestmemorygames.difficulte.DifficulteNombre.class);
                 startActivity(intent);
                 finish();
             }

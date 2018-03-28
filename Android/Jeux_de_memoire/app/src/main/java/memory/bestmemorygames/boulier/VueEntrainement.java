@@ -14,12 +14,7 @@ public class VueEntrainement extends Vue {
 
     private static final String TAG = "VueEntrainement";
 
-    private int nbTentativesUtilisees;
-
-    public VueEntrainement() {
-        super();
-        resetnbTentativesUtilisees();
-    }
+    private int nbTentativesUtilisees = 0;
 
     private void resetnbTentativesUtilisees() {
         nbTentativesUtilisees = 0;

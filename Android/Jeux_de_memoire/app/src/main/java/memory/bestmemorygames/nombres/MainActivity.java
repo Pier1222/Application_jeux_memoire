@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button tabButton[] =new Button[24];
+    Button tabButton[] =new Button[25];
     ArrayList buttonArray =new ArrayList<Button>();
     ArrayList caseAcocher=new ArrayList<Button>();
     Integer nombreDecase=1;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void UpdateId(){
-         for (int i = 0; i < 24; i++) {
+         for (int i = 0; i <= 24; i++) {
              tabButton[i] = new Button(this);
              int id=getResources().getIdentifier("button"+i, "id", getPackageName());
              tabButton[i].setId(id);
@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
          for (int i = 0; i < buttonArray.size(); i++) {
              button=(Button)buttonArray.get(i);
              assigned=findViewById(button.getId());
+             assigned.setBackground(color);
              assigned.setText("");
          }
      }
@@ -150,8 +151,7 @@ public class MainActivity extends AppCompatActivity {
              buttonCliqued.setText(buttonText.getText());
              buttonCliqued.setEnabled(false);
              buttonCliqued.setBackground(color);
-             caseAcocher.remove(0);
-             score++;
+             correct();
 
              TextView tv;
              tv=findViewById(R.id.textField);
@@ -169,14 +169,19 @@ public class MainActivity extends AppCompatActivity {
         if (caseAcocher.isEmpty()){
             win.jouer();
             clearBoard();
-            nombreDecase++;
+            if(nombreDecase < tabButton.length)
+                nombreDecase++;
             assigneCase(nombreDecase);
             changeText();
 
             timer=timer-200;
             startTimer();
-
         }
+    }
+
+    public void correct() {
+        caseAcocher.remove(0);
+        score++;
     }
 
     private void displayCaseRestante() {
@@ -188,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void startTimer() {
+    public void startTimer() {
         CountDownTimer countDownTimer = new CountDownTimer(timer, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -272,4 +277,6 @@ public class MainActivity extends AppCompatActivity {
         MIN_INTERVAL=1;
         MAX_INTERVAL=25;
     }
+
+
 }

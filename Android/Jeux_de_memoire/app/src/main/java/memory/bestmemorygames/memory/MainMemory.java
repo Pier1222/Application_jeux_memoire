@@ -215,6 +215,7 @@ public class MainMemory extends AppCompatActivity implements View.OnClickListene
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainMemory.this);
             alertDialogBuilder
                     .setMessage(getString(R.string.cartesRevelees) + "\n" + getString(R.string.points1) + " " + m.getScore() + " " + getString(R.string.points2) + "\n" + getString(R.string.demandeNom))
+                    .setTitle(getString(R.string.pairesTrouvees))
                     .setView(name)
                     .setCancelable(false)
                     .setPositiveButton(getString(R.string.rejouer), new DialogInterface.OnClickListener() {

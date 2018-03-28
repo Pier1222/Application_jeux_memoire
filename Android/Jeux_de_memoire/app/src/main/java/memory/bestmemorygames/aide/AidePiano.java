@@ -29,7 +29,17 @@ public class AidePiano extends AppCompatActivity {
         buttonEntrainement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), memory.bestmemorygames.piano.Vue.class);
+                Intent intent = new Intent(getApplicationContext(), memory.bestmemorygames.piano.VueEntrainement.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        final Button buttonDifficulte = (Button) findViewById(R.id.id_button_difficulte);
+        buttonDifficulte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), memory.bestmemorygames.difficulte.DifficultePiano.class);
                 startActivity(intent);
                 finish();
             }

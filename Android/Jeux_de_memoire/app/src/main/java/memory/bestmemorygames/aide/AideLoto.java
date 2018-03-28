@@ -29,7 +29,17 @@ public class AideLoto extends AppCompatActivity {
         buttonEntrainement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), memory.bestmemorygames.loto.VueLoto.class);
+                Intent intent = new Intent(getApplicationContext(), memory.bestmemorygames.loto.VueLotoEntrainement.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        final Button buttonDifficulte = (Button) findViewById(R.id.id_button_difficulte);
+        buttonDifficulte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), memory.bestmemorygames.difficulte.DifficulteLoto.class);
                 startActivity(intent);
                 finish();
             }

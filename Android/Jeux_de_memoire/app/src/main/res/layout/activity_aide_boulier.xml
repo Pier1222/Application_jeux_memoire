@@ -37,7 +37,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
-                android:text="TextView"
+                android:text="Observez la première ligne qui s'affiche. Attention, vous n'avez que 15 secondes pour la mémoriser !
+Ensuite, vous devez reproduire la séquence que vous avez observé en cliquant sur les boules vides, et choisir la couleur qui vous semble correct en haut.
+Puis, vous allez valiser et voir si vous avez gagné !"
                 android:textAlignment="center"
                 android:textColor="@color/bordure"
                 android:textSize="18sp" />
@@ -75,6 +77,21 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/id_button_difficulte"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="monospace"
+                    android:text="@string/difficulteAide"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
                 <Button
                     android:id="@+id/id_button_accueil"
                     style="@style/Widget.AppCompat.Button.Borderless.Colored"

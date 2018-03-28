@@ -12,6 +12,7 @@
     <!-- Application principale -->
     <string name="jouer">Jouer</string>
     <string name="entrainement">Entraînement</string>
+    <string name="difficulteAide">Difficulté</string>
     <string name="accueil">Accueil</string>
 
     <string name="joueraccueil">Jouer une partie normale</string>
@@ -44,9 +45,6 @@
     <string name="pianodifficulte1">Facile (Non existant)</string>
     <string name="pianodifficulte2">Moyen (Vous voyez les touches jouées par l\'ordinateur)</string>
     <string name="pianodifficulte3">Difficile (Vous ne voyez pas les touches jouées par l\'ordinateur)</string>
-
-    <string name="endEntrainementTitre">Entraînement terminé !</string>
-    <string name="endEntrainementTexte">Vous avez fini l\'entraînement.</string>
 
     <!-- Strings related to Settings -->
 
@@ -121,7 +119,7 @@
     <string name="pref_title_vibrate">Vibrate</string>
 
     <!-- Jeux -->
-    <string name="demandeNom">Saissisez votre nom si vous voulez enregistrer votre score:</string>
+    <string name="demandeNom">Saisissez votre nom si vous voulez enregistrer votre score:</string>
 
     <!-- Boulier -->
     <string name="rep">Répondre</string>
@@ -138,7 +136,7 @@
     <string name="notLastTentativeEnt">tentative(s) utilisées.</string>
 
     <string name="ligneNonCompleteTexte">Vous devez compléter la ligne du bas avant de répondre.</string>
-    <string name="LigneNonCompleteTitre">Ligne non compléte !</string>
+    <string name="LigneNonCompleteTitre">Ligne non complète !</string>
     <string name="LigneNonCompleteOk">J\'ai compris.</string>
 
     <string name="scoreFinal">Score final</string>
@@ -170,7 +168,7 @@
     <string name="perduTexte3">touche(s) dans cette séquence.</string>
 
     <string name="erreurEntrainement1">Vous avez appuyé correctement sur</string>
-    <string name="erreurEntrainement2">touche(s) avant de vous tromper</string>
+    <string name="erreurEntrainement2">touche(s) avant de vous tromper.</string>
 
     <string name="recommencerSequence">Recommencer la séquence</string>
 
@@ -201,11 +199,16 @@
     <string name="rejouer">Rejouer</string>
     <string name="revenir">Revenir au menu</string>
 
+    <string name="pairesTrouvees">Toute les paires sont trouvées !</string>
+    <string name="endEntrainementTexte1">Vous avez trouvé toute les paires en réalisant</string>
+    <string name="endEntrainementTexte2">erreur(s).</string>
+
     <!-- Nombres -->
     <string name="LoseText">Perdu ! Votre score est de:</string>
     <string name="Title">Dommage !</string>
     <string name="ok">Ok</string>
     <string name="Recommencer">Recommencer</string>
-    <string name="reassayerEnt">Retenter cette séquence de nombres</string>
-    <string name="LoseEntrainement">...</string>
+    <string name="reassayerEnt">Continuer</string>
+    <string name="LoseEntrainement1">Zut, vous vous êtes trompé à la case</string>
+    <string name="LoseEntrainement2">. Vous pouvez retenter votre chance avec une séquence de nombres de même taille.</string>
 </resources>

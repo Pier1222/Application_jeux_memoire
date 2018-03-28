@@ -36,6 +36,16 @@ public class AideMemory extends AppCompatActivity {
             }
         });
 
+        final Button buttonDifficulte = (Button) findViewById(R.id.id_button_difficulte);
+        buttonDifficulte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), memory.bestmemorygames.difficulte.DifficulteMemory.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         final Button buttonAccueil = (Button) findViewById(R.id.id_button_accueil);
         buttonAccueil.setOnClickListener(new View.OnClickListener() {
             @Override
